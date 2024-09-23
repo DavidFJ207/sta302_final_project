@@ -1,0 +1,92 @@
+---
+title: "STA302 Fall 2024 Final Project Part 1: Research Proposal and Data Introduction"
+author: 
+- "Wendy Huang"
+- "Gadiel David Flores"
+
+date: "04/10/24"
+subtitle: "Research Proposal and Data Introduction"
+output: pdf_document
+format: pdf
+number-sections: true
+bibliography: references.bib
+---
+# Potential Research Questions
+## Business: How do price, customer reviews, and service features influence customer satisfaction and repeat business in the online retail industry?
+## Studying: How do different study techniques and time management practices affect academic performance among university students?
+## Electric Cars: Are electric vehicles more environmentally sustainable than gasoline-powered cars when accounting for the energy sources used for electricity generation?
+
+# Work Division
+
+## Group Member 1:
+**Main Focus: Research and Data Analysis**
+
+- **Contributions**: 
+  - Locate and clean the dataset.
+  - Write the **Data Description** section (300 words).
+  - Fit the **Multiple Linear Regression Model** and write the **Preliminary Results** section (300 words).
+  - Conduct **Residual Analysis** and create the required residual plots.
+
+### Specific Tasks:
+1. **Locate the dataset** that fits the project requirements (open-source, contains a response variable and at least 9 predictors).
+2. **Clean the data**: Handle missing values, prepare numerical and categorical variables, and ensure it’s ready for regression.
+3. **Write the Data Description**:
+   - State where the data was found.
+   - Describe how the data was originally collected by the curator.
+   - Summarize the response variable and justify why it's suitable for linear regression.
+   - Summarize the predictor variables, provide numerical/graphical summaries, and interpret the descriptive statistics.
+4. **Fit the multiple linear regression model** using R, incorporating at least 5 predictors, including one categorical predictor.
+5. **Conduct residual analysis**:
+   - Check for violations of linear regression assumptions.
+   - Create residual plots and interpret their results.
+6. **Write the Preliminary Results**:
+   - Report on the fitted model.
+   - Discuss model assumptions (whether violated or not).
+   - Compare the preliminary model results to findings from the literature (summarized by Group Member 2).
+
+## Group Member 2:
+**Main Focus: Research Question, Literature Review, and Report Writing**
+
+- **Contributions**:
+  - Write the **Introduction** section (350 words).
+  - Conduct the **Literature Review**: Summarize three peer-reviewed academic papers related to the research question.
+  - Write the **Ethics Discussion** section (100-200 words).
+  - Compile the **Bibliography** and format citations.
+  - Final editing and formatting of the proposal.
+
+### Specific Tasks:
+1. **Formulate the research question**: Define a clear, focused research question based on the chosen dataset and explain why it’s suitable for linear regression.
+2. **Conduct the literature review**:
+   - Find and summarize three peer-reviewed academic papers related to the topic.
+   - Describe how each paper relates to the proposed research question and supports the use of linear regression.
+3. **Write the Introduction**:
+   - Introduce the relevance/importance of the research topic.
+   - Clearly state the research question.
+   - Summarize the results of the three academic papers and explain how they connect to your research.
+   - Justify why linear regression is an appropriate tool for this analysis.
+4. **Write the Ethics Discussion**: 
+   - Assess whether the dataset is trustworthy and ethically collected
+5. **Compile the bibliography**:
+   - Ensure proper formatting and inclusion of references in the proposal using APA format.
+6. **Final editing and formatting**:
+   - Review the entire document
+
+
+
+# Introduction (350 words)
+
+Provide an introduction to your research topic, clearly state your research question, and summarize three peer-reviewed research papers. Justify why linear regression is appropriate for your research question.
+
+# Data Description (300 words)
+
+## Data Source
+
+## Response and Predictor Variables
+
+# Ethics Discussion (100-200 words)
+
+# Preliminary Results (300 words)
+## Model Fitting
+## Residual Analysis
+
+# Bibliography

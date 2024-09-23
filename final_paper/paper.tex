@@ -1,0 +1,389 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  letterpaper,
+  DIV=11,
+  numbers=noendperiod]{scrartcl}
+
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else  
+    % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{5}
+% Make \paragraph and \subparagraph free-standing
+\makeatletter
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+\makeatother
+
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+\KOMAoption{captions}{tableheading}
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={STA302 Fall 2024 Final Project Part 1: Research Proposal and Data Introduction},
+  pdfauthor={Wendy Huang; Gadiel David Flores},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+
+\title{STA302 Fall 2024 Final Project Part 1: Research Proposal and Data
+Introduction}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Research Proposal and Data Introduction}
+\author{Wendy Huang \and Gadiel David Flores}
+\date{2024-04-10}
+
+\begin{document}
+\maketitle
+
+
+\section{Potential Research
+Questions}\label{potential-research-questions}
+
+\subsection{Business: How do price, customer reviews, and service
+features influence customer satisfaction and repeat business in the
+online retail
+industry?}\label{business-how-do-price-customer-reviews-and-service-features-influence-customer-satisfaction-and-repeat-business-in-the-online-retail-industry}
+
+\subsection{Studying: How do different study techniques and time
+management practices affect academic performance among university
+students?}\label{studying-how-do-different-study-techniques-and-time-management-practices-affect-academic-performance-among-university-students}
+
+\subsection{Electric Cars: Are electric vehicles more environmentally
+sustainable than gasoline-powered cars when accounting for the energy
+sources used for electricity
+generation?}\label{electric-cars-are-electric-vehicles-more-environmentally-sustainable-than-gasoline-powered-cars-when-accounting-for-the-energy-sources-used-for-electricity-generation}
+
+\section{Work Division}\label{work-division}
+
+\subsection{Group Member 1:}\label{group-member-1}
+
+\textbf{Main Focus: Research and Data Analysis}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Contributions}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Locate and clean the dataset.
+  \item
+    Write the \textbf{Data Description} section (300 words).
+  \item
+    Fit the \textbf{Multiple Linear Regression Model} and write the
+    \textbf{Preliminary Results} section (300 words).
+  \item
+    Conduct \textbf{Residual Analysis} and create the required residual
+    plots.
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Specific Tasks:}\label{specific-tasks}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Locate the dataset} that fits the project requirements
+  (open-source, contains a response variable and at least 9 predictors).
+\item
+  \textbf{Clean the data}: Handle missing values, prepare numerical and
+  categorical variables, and ensure it's ready for regression.
+\item
+  \textbf{Write the Data Description}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    State where the data was found.
+  \item
+    Describe how the data was originally collected by the curator.
+  \item
+    Summarize the response variable and justify why it's suitable for
+    linear regression.
+  \item
+    Summarize the predictor variables, provide numerical/graphical
+    summaries, and interpret the descriptive statistics.
+  \end{itemize}
+\item
+  \textbf{Fit the multiple linear regression model} using R,
+  incorporating at least 5 predictors, including one categorical
+  predictor.
+\item
+  \textbf{Conduct residual analysis}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Check for violations of linear regression assumptions.
+  \item
+    Create residual plots and interpret their results.
+  \end{itemize}
+\item
+  \textbf{Write the Preliminary Results}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Report on the fitted model.
+  \item
+    Discuss model assumptions (whether violated or not).
+  \item
+    Compare the preliminary model results to findings from the
+    literature (summarized by Group Member 2).
+  \end{itemize}
+\end{enumerate}
+
+\subsection{Group Member 2:}\label{group-member-2}
+
+\textbf{Main Focus: Research Question, Literature Review, and Report
+Writing}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Contributions}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Write the \textbf{Introduction} section (350 words).
+  \item
+    Conduct the \textbf{Literature Review}: Summarize three
+    peer-reviewed academic papers related to the research question.
+  \item
+    Write the \textbf{Ethics Discussion} section (100-200 words).
+  \item
+    Compile the \textbf{Bibliography} and format citations.
+  \item
+    Final editing and formatting of the proposal.
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Specific Tasks:}\label{specific-tasks-1}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Formulate the research question}: Define a clear, focused
+  research question based on the chosen dataset and explain why it's
+  suitable for linear regression.
+\item
+  \textbf{Conduct the literature review}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Find and summarize three peer-reviewed academic papers related to
+    the topic.
+  \item
+    Describe how each paper relates to the proposed research question
+    and supports the use of linear regression.
+  \end{itemize}
+\item
+  \textbf{Write the Introduction}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Introduce the relevance/importance of the research topic.
+  \item
+    Clearly state the research question.
+  \item
+    Summarize the results of the three academic papers and explain how
+    they connect to your research.
+  \item
+    Justify why linear regression is an appropriate tool for this
+    analysis.
+  \end{itemize}
+\item
+  \textbf{Write the Ethics Discussion}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Assess whether the dataset is trustworthy and ethically collected
+  \end{itemize}
+\item
+  \textbf{Compile the bibliography}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Ensure proper formatting and inclusion of references in the proposal
+    using APA format.
+  \end{itemize}
+\item
+  \textbf{Final editing and formatting}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Review the entire document
+  \end{itemize}
+\end{enumerate}
+
+\section{Introduction (350 words)}\label{introduction-350-words}
+
+Provide an introduction to your research topic, clearly state your
+research question, and summarize three peer-reviewed research papers.
+Justify why linear regression is appropriate for your research question.
+
+\section{Data Description (300 words)}\label{data-description-300-words}
+
+\subsection{Data Source}\label{data-source}
+
+\subsection{Response and Predictor
+Variables}\label{response-and-predictor-variables}
+
+\section{Ethics Discussion (100-200
+words)}\label{ethics-discussion-100-200-words}
+
+\section{Preliminary Results (300
+words)}\label{preliminary-results-300-words}
+
+\subsection{Model Fitting}\label{model-fitting}
+
+\subsection{Residual Analysis}\label{residual-analysis}
+
+\section{Bibliography}\label{bibliography}
+
+
+
+
+\end{document}
