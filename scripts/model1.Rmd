@@ -1,0 +1,67 @@
+### Load Data
+\begin{itemize}
+  \item Quarterly_Average: the body mass index of an individual as the response
+  \item Detached_Absorption_Quarterly_Avg: age of the individual (rounded to an integer) 
+  \item Starting_Detached_Construction: Male or Female designation for gender (this survey predates when other options for this category were provided)
+  \item Completed_Construction_Detached: a self-identified race with options White, Black, Hispanic, Mexican, Other
+  \item rates: The midpoint of a household income bracket
+  \item Detached_Unabsorbed_Quarterly_Avg: Hours of sleep per night on weekdays, self-reported
+\end{itemize}
+```{r}
+# loads the dataset into R
+data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
+
+```
+### Multiple Linear Model
+```{r}
+model <- lm(Quarterly_Average ~ Detached_Absorption_Quarterly_Avg + 
+              Detached_Unabsorbed_Quarterly_Avg + 
+              Starting_Detached_Construction + 
+              Completed_Construction_Detached + 
+              rates, 
+            data = data)
+intercept <- round(as.numeric(coef(model)[1]))
+```
+
+### Assumptions of this model
+
+```{r}
+# replace NULL with appropriate values to be used in y and x axes of plot respectively.
+y_value <- resid(model)
+x_value <- fitted(model)
+
+# plots the residual vs fitted plot
+plot(x = x_value, y = y_value, main="Residual vs Fitted", xlab="Fitted",
+     ylab="Residuals")
+```
+## Residuals vs each predictor
+```{r}
+# Plot multiple graphs in a single grid (1 row, 3 columns)
+par(mfrow=c(1,1))
+
+# Plot Residual vs Sold Homes
+plot(x = data$Detached_Absorption_Quarterly_Avg, y = y_value, main="Residual vs Sold Homes", xlab="Sold Homes", ylab="Residual")
+
+# Plot Residual vs Unsold Homes
+plot(x = data$Detached_Unabsorbed_Quarterly_Avg, y = y_value, main="Residual vsUnsold Homes", 
+     xlab="Unsold Homes", ylab="Residual")
+
+# Plot Residual vs New homes being built
+plot(x = data$Starting_Detached_Construction, y = y_value, main="Residual vs New homes being built", 
+     xlab="New homes being built", ylab="Residual")
+
+# Plot Residual vs Homes Completed
+plot(x = data$Completed_Construction_Detached, y = y_value, main="Residual vs Homes Completed", 
+     xlab="Homes Completed", ylab="Residual")
+
+# Boxplot Residual vs Rate Hike
+boxplot(y_value ~ data$rates, main="Residual vs Rate Hike", 
+        xlab="Rate Hike", ylab="Residuals")
+```
+### QQ Plot
+```{r}
+# Create QQ plot for residuals
+qqnorm(resid(model), main = "Normal QQ Plot of Residuals")
+qqline(resid(model))
+```
+

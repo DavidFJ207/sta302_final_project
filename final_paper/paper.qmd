@@ -11,10 +11,6 @@ format: pdf
 number-sections: true
 bibliography: references.bib
 ---
-# Potential Research Questions
-## Business: How do price, customer reviews, and service features influence customer satisfaction and repeat business in the online retail industry?
-## Studying: How do different study techniques and time management practices affect academic performance among university students?
-## Electric Cars: Are electric vehicles more environmentally sustainable than gasoline-powered cars when accounting for the energy sources used for electricity generation?
 
 # Work Division
 
@@ -75,18 +71,93 @@ bibliography: references.bib
 
 # Introduction (350 words)
 
-Provide an introduction to your research topic, clearly state your research question, and summarize three peer-reviewed research papers. Justify why linear regression is appropriate for your research question.
-
 # Data Description (300 words)
 
 ## Data Source
 
+Using data from Statistics Canada, we extracted five datasets. @StatCan-NewHousingPriceIndex served as the foundation for this research paper, as it contained the main statistic we wanted to analyze. @StatCan-NewHousingPriceIndex represents the new housing price index, which calculates the average cost of new housing each month by multiplying by 100 and dividing by the base year. This provides an index reflecting housing costs for any given year and month. We then utilized @StatCan-CPI, @StatCan-GDP, @StatCan-HousingStarts, @StatCan-FinancialMarketStats, and @StatCan-HousingAbsorptions to extract our 13 predictors, including Absorption, GDP, CPI, interest rates, and Construction. Specifically, Absorption and Construction are further divided into two parts. Absorbtion is divided into semi-detached homes and single homes as well as empty and sold houses for any given month. Construction is categorized into three parts: new construction, under construction, and finished construction. These datasets were cleaned by removing missing values, converting data into whole integers, and merging them into one dataset. Additionally, the data spans from 1997 to 2016 and is divided quarterly, providing 76 entries. Lastly, we used interest rates to create our categorical predictor. This was done by comparing the entry i with entry i+1 in order to determine if there was an interest hike.   
+
 ## Response and Predictor Variables
+Given our research question [TODO: what specific factors have the greatest effect on home prices in Canada]. The response variable chosen to help answer our research question is 'new housing price index'. This variable is suitable for linear regression because it is continuous, enabling us to model its relationships with multiple predictors. Additionally, since the new housing price index is influenced by economic variables, it allows us to identify trends and patterns through our linear regression model. For these reasons, it is a strong candidate for our model. Our five predictor variables are the number of available homes, homes sold, homes starting construction, new homes completed, and rate hikes
 
 # Ethics Discussion (100-200 words)
 
 # Preliminary Results (300 words)
 ## Model Fitting
+
+# Load Data
+\begin{itemize}
+  \item $Quarterly_Average$: 
+  \item $Detached_Absorption_Quarterly_Avg$: 
+  \item $Starting_Detached_Construction$: 
+  \item $Completed_Construction_Detached$:
+  \item $rates$:
+  \item $Detached_Unabsorbed_Quarterly_Avg$:
+\end{itemize}
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(readr)
+# loads the dataset into R
+data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
+
+```
+# Multiple Linear Model
+```{r}
+model <- lm(Quarterly_Average ~ Detached_Absorption_Quarterly_Avg + 
+              Detached_Unabsorbed_Quarterly_Avg + 
+              Starting_Detached_Construction + 
+              Completed_Construction_Detached + 
+              rates, 
+            data = data)
+intercept <- round(as.numeric(coef(model)[1]))
+```
+
+# Assumptions of this model
+
+```{r}
+# replace NULL with appropriate values to be used in y and x axes of plot respectively.
+y_value <- resid(model)
+x_value <- fitted(model)
+
+# plots the residual vs fitted plot
+plot(x = x_value, y = y_value, main="Residual vs Fitted", xlab="Fitted",
+     ylab="Residuals")
+```
+# Residuals vs each predictor
+```{r}
+# Plot multiple graphs in a single grid (1 row, 3 columns)
+par(mfrow=c(1,1))
+
+# Plot Residual vs Sold Homes
+plot(x = data$Detached_Absorption_Quarterly_Avg, y = y_value, main="Residual vs Sold Homes", xlab="Sold Homes", ylab="Residual")
+
+# Plot Residual vs Unsold Homes
+plot(x = data$Detached_Unabsorbed_Quarterly_Avg, y = y_value, main="Residual vsUnsold Homes", 
+     xlab="Unsold Homes", ylab="Residual")
+
+# Plot Residual vs New homes being built
+plot(x = data$Starting_Detached_Construction, y = y_value, main="Residual vs New homes being built", 
+     xlab="New homes being built", ylab="Residual")
+
+# Plot Residual vs Homes Completed
+plot(x = data$Completed_Construction_Detached, y = y_value, main="Residual vs Homes Completed", 
+     xlab="Homes Completed", ylab="Residual")
+
+# Boxplot Residual vs Rate Hike
+boxplot(y_value ~ data$rates, main="Residual vs Rate Hike", 
+        xlab="Rate Hike", ylab="Residuals")
+```
+# QQ Plot
+```{r}
+# Create QQ plot for residuals
+qqnorm(resid(model), main = "Normal QQ Plot of Residuals")
+qqline(resid(model))
+```
+
+
+
+
 ## Residual Analysis
 
 # Bibliography
