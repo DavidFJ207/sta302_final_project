@@ -82,8 +82,6 @@ Given our research question [TODO: what specific factors have the greatest effec
 
 # Ethics Discussion (100-200 words)
 
-# Preliminary Results (300 words)
-
 # Residual Analysis
 In this section, we will explore the assumptions made for our linear regression models and check for any violations. To begin, using our model in @sec-model, we created residual plots to verify these assumptions. The first graph we will examine is @fig-resid, which is our Residuals vs. Fitted Values plot. This graph shows some clustering around a fitted value of 100 and above the 0 residual line. It also displays a decreasing fanning pattern. These two characteristics suggest potential non-linearity and some correlated errors.
 
@@ -201,7 +199,12 @@ boxplot(y_value ~ data$rates,
 qqnorm(resid(model), main = "Normal QQ Plot of Residuals")
 qqline(resid(model))
 ```
+  
+\newpage  
+# Preliminary Results (300 words)  
+Our model demonstrates the relationship between the New Housing Price Index (NHPI) and various predictors, such as detached absorption and unabsorbed homes, homes starting construction, completed constructions, and rate hikes. To start, we will discuss the intercept, which is 88.52 when all predictors are zero. This serves as a baseline for evaluating the effects of other predictors.
 
+The first predictor is detached absorption. For each additional home sold in a quarter, the expected decrease in the NHPI is 0.0227 points. In contrast, unabsorbed homes cause an increase of 0.005315 points in the NHPI. New homes beginning construction have a minimal impact, with a 0.0009611 point increase in the NHPI for every home that starts construction. Meanwhile, completed homes have a greater impact, with a 0.002977 point increase. Lastly, rate hikes have the most significant impact: when there is a rate increase, the NHPI decreases by 13.41 points.  
 \newpage
 
 # Bibliography  
