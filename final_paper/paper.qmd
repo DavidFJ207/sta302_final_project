@@ -83,81 +83,125 @@ Given our research question [TODO: what specific factors have the greatest effec
 # Ethics Discussion (100-200 words)
 
 # Preliminary Results (300 words)
-## Model Fitting
 
-# Load Data
-\begin{itemize}
-  \item $Quarterly_Average$: 
-  \item $Detached_Absorption_Quarterly_Avg$: 
-  \item $Starting_Detached_Construction$: 
-  \item $Completed_Construction_Detached$:
-  \item $rates$:
-  \item $Detached_Unabsorbed_Quarterly_Avg$:
-\end{itemize}
+# Residual Analysis
+In this section, we will explore the assumptions made for our linear regression models and check for any violations. To begin, using our model in @sec-model, we created residual plots to verify these assumptions. The first graph we will examine is @fig-resid, which is our Residuals vs. Fitted Values plot. This graph shows some clustering around a fitted value of 100 and above the 0 residual line. It also displays a decreasing fanning pattern. These two characteristics suggest potential non-linearity and some correlated errors.
+
+Next, we will review the residuals vs. predictors. In @fig-residuals-3 and @fig-residuals-4 The plots for homes being built and completed homes show the least amount of assumption violations, as the graphs exhibit good spread and randomness. In contrast, the plots for homes sold @fig-residuals-1 and unsold homes @fig-residuals-2 display some fanning and clustering, which may indicate correlated errors and non-constant variance. Our categorical predictor, rate hike @fig-residuals-5 , reveals some non-constant variance, as the spread of residuals for "1" is wider than for "0."
+
+Lastly, while most residuals align well with the line in the QQ plot @fig-qq_plot , there are deviations at the lower and upper extremes, suggesting some skewness. This indicates that the residuals are not perfectly normally distributed, which may signal a violation of the normality assumption.  
+
+## Model Fitting {#sec-model}  
+
+**Data**  
+- **Quarterly Average**: This is our response variable, representing the average cost of a home in Canada.  
+- **Detached Absorption Quarterly Avg**: This is our first predictor variable, describing the number of houses sold in a quarter.  
+- **Starting Detached Construction**:  This predictor variable indicates the number of houses that began construction in a quarter.  
+- **Completed Construction Detached**:  This represents the number of homes completed in a given quarter.  
+- **Rates**:  This is our categorical predictor, with a value of 1 if there was a rate hike in that quarter or 0 if there was not.  
+- **Detached Unabsorbed Quarterly Avg**:  This is our final predictor, indicating the number of available houses that were not sold during that quarter.  
+
 ```{r}
+#| label: fig-data
+#| fig-cap: "Data"
+#| echo: false
+#| warning: false
+#| message: false
+
 library(tidyverse)
 library(ggplot2)
 library(readr)
-# loads the dataset into R
-data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
 
+# Load the dataset into R
+data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
 ```
-# Multiple Linear Model
+
 ```{r}
+#| label: fig-model
+#| fig-cap: "Multiple Linear Model"
+#| echo: false
+#| warning: false
+#| message: false
+
+# Fit a multiple linear model
 model <- lm(Quarterly_Average ~ Detached_Absorption_Quarterly_Avg + 
               Detached_Unabsorbed_Quarterly_Avg + 
               Starting_Detached_Construction + 
               Completed_Construction_Detached + 
               rates, 
             data = data)
+# Extract the model intercept
 intercept <- round(as.numeric(coef(model)[1]))
+# Display Results
+summary(model)
 ```
 
-# Assumptions of this model
-
 ```{r}
-# replace NULL with appropriate values to be used in y and x axes of plot respectively.
+#| label: fig-resid
+#| fig-cap: "Residual vs Fitted Values"
+#| echo: false
+#| warning: false
+#| message: false
+
+# Residual and fitted values for the model
 y_value <- resid(model)
 x_value <- fitted(model)
 
-# plots the residual vs fitted plot
-plot(x = x_value, y = y_value, main="Residual vs Fitted", xlab="Fitted",
-     ylab="Residuals")
+# Plot the residual vs fitted values
+plot(x = x_value, y = y_value, 
+     main = "Residual vs Fitted", 
+     xlab = "Fitted", 
+     ylab = "Residuals")
 ```
-# Residuals vs each predictor
+
 ```{r}
-# Plot multiple graphs in a single grid (1 row, 3 columns)
-par(mfrow=c(1,1))
+#| label: fig-residuals
+#| fig-cap: "Residuals vs Each Predictor"
+#| echo: false
+#| warning: false
+#| message: false
 
-# Plot Residual vs Sold Homes
-plot(x = data$Detached_Absorption_Quarterly_Avg, y = y_value, main="Residual vs Sold Homes", xlab="Sold Homes", ylab="Residual")
+# Set up plot layout: 1 row, 3 columns
+par(mfrow = c(1, 1))
 
-# Plot Residual vs Unsold Homes
-plot(x = data$Detached_Unabsorbed_Quarterly_Avg, y = y_value, main="Residual vsUnsold Homes", 
-     xlab="Unsold Homes", ylab="Residual")
+# Residual vs Sold Homes
+plot(x = data$Detached_Absorption_Quarterly_Avg, y = y_value, 
+     main = "Residual vs Sold Homes", 
+     xlab = "Sold Homes", ylab = "Residuals")
 
-# Plot Residual vs New homes being built
-plot(x = data$Starting_Detached_Construction, y = y_value, main="Residual vs New homes being built", 
-     xlab="New homes being built", ylab="Residual")
+# Residual vs Unsold Homes
+plot(x = data$Detached_Unabsorbed_Quarterly_Avg, y = y_value, 
+     main = "Residual vs Unsold Homes", 
+     xlab = "Unsold Homes", ylab = "Residuals")
 
-# Plot Residual vs Homes Completed
-plot(x = data$Completed_Construction_Detached, y = y_value, main="Residual vs Homes Completed", 
-     xlab="Homes Completed", ylab="Residual")
+# Residual vs New Homes Being Built
+plot(x = data$Starting_Detached_Construction, y = y_value, 
+     main = "Residual vs New Homes Being Built", 
+     xlab = "New Homes Being Built", ylab = "Residuals")
 
-# Boxplot Residual vs Rate Hike
-boxplot(y_value ~ data$rates, main="Residual vs Rate Hike", 
-        xlab="Rate Hike", ylab="Residuals")
+# Residual vs Homes Completed
+plot(x = data$Completed_Construction_Detached, y = y_value, 
+     main = "Residual vs Homes Completed", 
+     xlab = "Homes Completed", ylab = "Residuals")
+
+# Boxplot of Residuals vs Rate Hike
+boxplot(y_value ~ data$rates, 
+        main = "Residual vs Rate Hike", 
+        xlab = "Rate Hike", ylab = "Residuals")
 ```
-# QQ Plot
+
 ```{r}
-# Create QQ plot for residuals
+#| label: fig-qq_plot
+#| fig-cap: "QQ Plot"
+#| echo: false
+#| warning: false
+#| message: false
+
+# Create a QQ plot for residuals
 qqnorm(resid(model), main = "Normal QQ Plot of Residuals")
 qqline(resid(model))
 ```
 
+\newpage
 
-
-
-## Residual Analysis
-
-# Bibliography
+# Bibliography  
