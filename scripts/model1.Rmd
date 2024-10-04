@@ -8,6 +8,8 @@
   \item Detached_Unabsorbed_Quarterly_Avg: Hours of sleep per night on weekdays, self-reported
 \end{itemize}
 ```{r}
+install.packages(tidyverse)
+library(tidyverse)
 # loads the dataset into R
 data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
 
