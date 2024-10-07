@@ -4,71 +4,13 @@ author:
 - "Wendy Huang"
 - "Gadiel David Flores"
 
-date: "04/10/24"
+date: "07/10/24"
 subtitle: "Research Proposal and Data Introduction"
 output: pdf_document
 format: pdf
 number-sections: true
 bibliography: references.bib
 ---
-
-# Work Division
-
-## Group Member 1:
-**Main Focus: Research and Data Analysis**
-
-- **Contributions**: 
-  - Locate and clean the dataset.
-  - Write the **Data Description** section (300 words).
-  - Fit the **Multiple Linear Regression Model** and write the **Preliminary Results** section (300 words).
-  - Conduct **Residual Analysis** and create the required residual plots.
-
-### Specific Tasks:
-1. **Locate the dataset** that fits the project requirements (open-source, contains a response variable and at least 9 predictors).
-2. **Clean the data**: Handle missing values, prepare numerical and categorical variables, and ensure it’s ready for regression.
-3. **Write the Data Description**:
-   - State where the data was found.
-   - Describe how the data was originally collected by the curator.
-   - Summarize the response variable and justify why it's suitable for linear regression.
-   - Summarize the predictor variables, provide numerical/graphical summaries, and interpret the descriptive statistics.
-4. **Fit the multiple linear regression model** using R, incorporating at least 5 predictors, including one categorical predictor.
-5. **Conduct residual analysis**:
-   - Check for violations of linear regression assumptions.
-   - Create residual plots and interpret their results.
-6. **Write the Preliminary Results**:
-   - Report on the fitted model.
-   - Discuss model assumptions (whether violated or not).
-   - Compare the preliminary model results to findings from the literature (summarized by Group Member 2).
-
-## Group Member 2:
-**Main Focus: Research Question, Literature Review, and Report Writing**
-
-- **Contributions**:
-  - Write the **Introduction** section (350 words).
-  - Conduct the **Literature Review**: Summarize three peer-reviewed academic papers related to the research question.
-  - Write the **Ethics Discussion** section (100-200 words).
-  - Compile the **Bibliography** and format citations.
-  - Final editing and formatting of the proposal.
-
-### Specific Tasks:
-1. **Formulate the research question**: Define a clear, focused research question based on the chosen dataset and explain why it’s suitable for linear regression.
-2. **Conduct the literature review**:
-   - Find and summarize three peer-reviewed academic papers related to the topic.
-   - Describe how each paper relates to the proposed research question and supports the use of linear regression.
-3. **Write the Introduction**:
-   - Introduce the relevance/importance of the research topic.
-   - Clearly state the research question.
-   - Summarize the results of the three academic papers and explain how they connect to your research.
-   - Justify why linear regression is an appropriate tool for this analysis.
-4. **Write the Ethics Discussion**: 
-   - Assess whether the dataset is trustworthy and ethically collected
-5. **Compile the bibliography**:
-   - Ensure proper formatting and inclusion of references in the proposal using APA format.
-6. **Final editing and formatting**:
-   - Review the entire document
-
-
-
 # Introduction
 Housing affordability and price fluctuations have become pressing issues in metropolitan areas, and Toronto is no exception. As one of Canada's largest and fastest-growing cities, understanding the factors influencing house prices in Toronto is crucial for policymakers, developers, and potential homeowners. Over the past decade, housing prices have seen a steep upward trend, driven by a combination of housing supply and demand, economic, and policy-related factors.(@5causesbehindtoronto) This study aims to investigate the relationship between several key housing market indicators—namely, the number of available homes, homes sold, homes starting construction, new homes completed, and interest rate hikes—and housing prices in Toronto. By analyzing these factors, this research will contribute to a more comprehensive understanding of Toronto's housing market dynamics.
 
@@ -80,7 +22,7 @@ The paper by Guiwen Bai and Yu Ma (@fundamentalhousing) uses a multi-factor regr
 
 Given these findings, linear regression is an appropriate tool for analyzing how these supply-side continuous variables interact to affect prices in Toronto. The clear quantitative relationship between supply predictors (available homes, homes sold, etc.) and price response aligns dynamically well with the assumptions of linear regression, making it a suitable method for this analysis. Linear regression allows us to quantify the relationship between these factors and price, providing insights into which variables have the most significant impact.
 
-# Data Description (300 words)
+# Data Description
 
 ## Data Source
 
@@ -89,14 +31,19 @@ Using data from Statistics Canada, we extracted five datasets. @StatCan-NewHousi
 ## Response and Predictor Variables
 Given our research question how do supply-side factors, such as housing availability, sales volume, construction starts, completions, and interest rate, impact housing prices in Toronto, the response variable chosen to help answer our research question is 'new housing price index'. This variable is suitable for linear regression because it is continuous, enabling us to model its relationships with multiple predictors. Additionally, since the new housing price index is influenced by economic variables, it allows us to identify trends and patterns through our linear regression model. For these reasons, it is a strong candidate for our model. Our five predictor variables are the number of available homes, homes sold, homes starting construction, new homes completed, and rate hikes
 
-# Ethics Discussion (100-200 words)
+# Ethics Discussion
 The datasets extracted from Statistics Canada are both trustworthy and ethically collected, as they originate from a reputable national statistical agency committed to maintaining data integrity and transparency. Statistics Canada follows strict protocols for data collection, ensuring that the information is accurate, reliable, and reflective of real market conditions (@StatCan). While the datasets themselves are typically reliable and collected following rigorous ethical standards, potential risks related to racial and ethnic disparities in housing must be acknowledged.
 
 Ethical considerations also arise from the treatment of sensitive information, particularly regarding interest rates and housing data, which could impact individual financial circumstances. The datasets used in this study focus on aggregate data rather than individual responses, thus minimizing privacy concerns. 
 
 Moreover, the datasets underwent thorough cleaning processes to ensure accuracy, further reinforcing their reliability for analysis. Overall, the ethical collection practices and transparency associated with these datasets support their trustworthiness for examining the impacts of supply-side factors on housing prices in Toronto.
 
-# Residual Analysis
+# Preliminary Results 
+Our model demonstrates the relationship between the New Housing Price Index (NHPI) and various predictors, such as detached absorption and unabsorbed homes, homes starting construction, completed constructions, and rate hikes. To start, we will discuss the intercept, which is 88.52 when all predictors are zero. This serves as a baseline for evaluating the effects of other predictors.
+
+The first predictor is detached absorption. For each additional home sold in a quarter, the expected decrease in the NHPI is 0.0227 points. In contrast, unabsorbed homes cause an increase of 0.005315 points in the NHPI. New homes beginning construction have a minimal impact, with a 0.0009611 point increase in the NHPI for every home that starts construction. Meanwhile, completed homes have a greater impact, with a 0.002977 point increase. Lastly, rate hikes have the most significant impact: when there is a rate increase, the NHPI decreases by 13.41 points. 
+
+## Residual Analysis
 In this section, we will explore the assumptions made for our linear regression models and check for any violations. To begin, using our model in @sec-model, we created residual plots to verify these assumptions. The first graph we will examine is @fig-resid, which is our Residuals vs. Fitted Values plot. This graph shows some clustering around a fitted value of 100 and above the 0 residual line. It also displays a decreasing fanning pattern. These two characteristics suggest potential non-linearity and some correlated errors.
 
 Next, we will review the residuals vs. predictors. In @fig-residuals-3 and @fig-residuals-4 The plots for homes being built and completed homes show the least amount of assumption violations, as the graphs exhibit good spread and randomness. In contrast, the plots for homes sold @fig-residuals-1 and unsold homes @fig-residuals-2 display some fanning and clustering, which may indicate correlated errors and non-constant variance. Our categorical predictor, rate hike @fig-residuals-5 , reveals some non-constant variance, as the spread of residuals for "1" is wider than for "0."
@@ -135,17 +82,27 @@ data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
 #| warning: false
 #| message: false
 
-# Fit a multiple linear model
+library(tibble)
+library(knitr)
+
+# multiple linear model
 model <- lm(Quarterly_Average ~ Detached_Absorption_Quarterly_Avg + 
               Detached_Unabsorbed_Quarterly_Avg + 
               Starting_Detached_Construction + 
               Completed_Construction_Detached + 
               rates, 
             data = data)
-# Extract the model intercept
-intercept <- round(as.numeric(coef(model)[1]))
-# Display Results
-summary(model)
+
+# create a data frame
+coefficients_table <- as.data.frame(coef(model))
+coefficients_table <- coefficients_table %>%
+  rownames_to_column("Variable") %>%
+  rename("Coefficient" = "coef(model)")
+
+coefficients_table <- coefficients_table[1:6, ]
+
+# summary table
+kable(coefficients_table, caption = "Summary Table of Regression Coefficients", format = "markdown")
 ```
 
 ```{r}
@@ -215,10 +172,7 @@ qqline(resid(model))
 ```
   
 \newpage  
-# Preliminary Results (300 words)  
-Our model demonstrates the relationship between the New Housing Price Index (NHPI) and various predictors, such as detached absorption and unabsorbed homes, homes starting construction, completed constructions, and rate hikes. To start, we will discuss the intercept, which is 88.52 when all predictors are zero. This serves as a baseline for evaluating the effects of other predictors.
-
-The first predictor is detached absorption. For each additional home sold in a quarter, the expected decrease in the NHPI is 0.0227 points. In contrast, unabsorbed homes cause an increase of 0.005315 points in the NHPI. New homes beginning construction have a minimal impact, with a 0.0009611 point increase in the NHPI for every home that starts construction. Meanwhile, completed homes have a greater impact, with a 0.002977 point increase. Lastly, rate hikes have the most significant impact: when there is a rate increase, the NHPI decreases by 13.41 points.  
+ 
 \newpage
 
 # Bibliography  
