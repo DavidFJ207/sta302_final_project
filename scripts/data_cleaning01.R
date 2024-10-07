@@ -20,7 +20,8 @@ raw_housing_price <- read_csv(here::here("data/raw_data/housing_price.csv"))
 raw_housing_absorbtion <- read_csv(here::here("data/raw_data/housing_absorbtion.csv"))
 raw_financial <- read_csv(here::here("data/raw_data/financial.csv"))
 #### Helper Function to Process Data ####
-# Function for processing and extracting rows from datasets
+
+# Processing and extracting rows from datasets
 process_data <- function(data, row_num, variable_name, drop_columns = c(1, 2), group_and_average = TRUE) {
   data_processed <- data %>%
     filter(row_number() == row_num) %>%
@@ -51,7 +52,7 @@ process_data <- function(data, row_num, variable_name, drop_columns = c(1, 2), g
   return(data_processed)
 }
 
-# Function to process construction data
+# Process construction data
 process_construction_data <- function(data, row_num) {
   processed_data <- data %>%
     filter(row_number() == row_num) %>%
