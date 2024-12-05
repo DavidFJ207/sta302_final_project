@@ -32,10 +32,12 @@ For this analysis, the focus will be on identifying and validating the linear re
 
 The structure of this paper is as follows: In the Methods section, we describe the dataset acquisition process and the data cleaning steps undertaken for subsequent analysis. Result section introduce the result of the linear regression and the validation of the model. Limitation section discuss the limitation of the model and dataset selection and processing. Ethics are discussed in the ethics section.
 
+\newpage 
 # Methods
 
 ```{r}
-#| include: false
+#| echo: false
+#| eval: true
 #| warning: false
 #| message: false
 
@@ -78,7 +80,7 @@ To enhance model reliability, predictors with high VIFs, such as `GDP_Quarterly_
 The stepwise, structured approach to developing the MLR model ensured robustness and validity while aligning with theoretical principles from the course material. Preprocessing and feature selection techniques addressed potential biases and assumption violations. Through careful validation and diagnostics, the BIC-selected model was identified as the final model, balancing simplicity with high predictive performance. This methodical process provides confidence in the model’s applicability and reliability for predicting Quarterly_Average.
 
 
-# Results {#sex-results}
+# Results {#sec-results}
 
 ## 1. Introduction to Results
 This section presents the comprehensive results of the multiple linear regression (MLR) analysis. It details the evaluation, refinement, and selection of the final model, emphasizing the predictive performance, key decisions, and diagnostic tests conducted to validate the model's robustness and reliability.
@@ -90,7 +92,8 @@ The analysis involved testing various models to balance predictive power and int
 - BIC-based Stepwise Regression: Prioritized simpler models to reduce overfitting risks.
 
 ```{r}
-#| include: false
+#| echo: false
+#| eval: true
 #| warning: false
 #| message: false
 
@@ -168,8 +171,10 @@ Several diagnostic checks were conducted to ensure the validity and reliability 
 ## 5. Interpretation of Final Model
 
 ```{r}
-library(knitr)
-
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
 # Model Performance Metrics
 performance_metrics <- data.frame(
   Metric = c(
@@ -290,7 +295,7 @@ The analysis focused on understanding the factors influencing new home prices, a
 ```
 
 
-# Ethics Discussion {#sex-ethics}
+# Ethics Discussion {#sec-ethics}
 
 The dataset used in this analysis originates from Statistics Canada, a reputable and reliable source, which ensures the data’s credibility. (StatCan) However, the sensitivity of the response variable—house prices—requires careful ethical consideration. Housing affordability impacts individuals and communities significantly, and any conclusions drawn from this analysis may influence public perception or policy decisions.
 
