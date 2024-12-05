@@ -16,22 +16,33 @@ output:
 
 # Introduction
 
-```{r include-intro, echo=FALSE, eval=FALSE}
-# Write the introduction here, ensuring it addresses:
-# 1. The motivation and relevance of the project.
-# 2. The research question of interest.
-# 3. Connection of the research question to at least three peer-reviewed papers.
-# 4. Why linear regression is suitable to answer the research question.
-```
+Housing affordability has become a pressing issue in many urban cities, including Toronto, where rising house prices have placed both homeowners and tenants out of reach for many years. This paper is conducted to investigating several key house indicators to the influence of house price. This is essential for policymakers , real estate professionals and potential homeowners seeking to navigate this challenging market.
 
+Based on prior experience, we hypothesize that housing supply is a primary determinant of house prices. Therefore, we selected key indicators of housing supply as predictors: the number of available homes, homes sold, homes under construction, new homes completed, and the rate hike, which serves as a proxy for investment conditions. This analysis aims to use the multiple linear regression model to investigate the relationship between house prices and these factors, with the rate hike modeled as a categorical variable capture the impact of interest rate changes on housing affordability.
+
+We conducted literature reviews to validate the selection of our predictors based on prior studies. Housing supply is consistently shown to be a critical factor influencing house prices. Research indicates that higher sales activity (houses sold) is often associated with increased demand, which drives prices upward. Conversely, an oversupply of unsold houses tends to push prices downward. These relationships are commonly examined using hedonic and linear regression models, where transactional data serve as key predictors for estimating price changes effectively (@housepriceprediction).
+
+The number of newly constructed and completed houses influences house prices by affecting market supply. An increase in construction tends to stabilize prices by meeting demand, while lower construction rates can contribute to supply constraints and higher prices. "Global House Prices: Trends and Cycles" highlights the influence of new constructions and completions on house prices. Regression analyses reveal that increases in supply through construction stabilize prices, while supply shortages contribute to price hikes (@housingmarkets)
+
+In the context of rate hikes, the CEPR report discusses their inclusion in econometric models to study the effects of borrowing costs on housing affordability and prices. It finds that higher rates reduce demand, reflected in lower prices, a relationship frequently captured through regression techniques (@whatdriveshouseprices)
+
+Our literature review confirms that the selected predictors—houses sold, houses constructed, houses under construction, unsold houses, and rate hikes—have been previously studied and exhibit a linear relationship with house prices. Linear regression is recognized as a valid method for this analysis, offering a clear way to quantify the relationships between house prices (the response) and these predictors. The validity of the linear relationship will be tested and thoroughly discussed later, as this is a key objective of this paper.
+
+For this analysis, the focus will be on identifying and validating the linear relationship between the predictors and the response variable. We will employ exploratory data analysis (EDA) and evaluate model performance using metrics such as AIC, BIC, and adjusted \( R^2 \). Through these statistical methods, we aim to establish that a linear regression relationship exists between house prices and the predictors: the number of available homes, homes sold, homes under construction, homes completed, and rate hikes.
+
+The structure of this paper is as follows: In the Methods section, we describe the dataset acquisition process and the data cleaning steps undertaken for subsequent analysis. Result section introduce the result of the linear regression and the validation of the model. Limitation section discuss the limitation of the model and dataset selection and processing. Ethics are discussed in the ethics section.
 
 # Methods
+
 ```{r}
 #| include: false
 #| warning: false
 #| message: false
 
-knitr::include_graphics(here::here("final_paper", "Flow Chart.png"))
+library(knitr)
+library(here)
+
+knitr::include_graphics(here::here("final_paper", "flow_chart.png"))
 
 ```
 
@@ -67,7 +78,7 @@ To enhance model reliability, predictors with high VIFs, such as `GDP_Quarterly_
 The stepwise, structured approach to developing the MLR model ensured robustness and validity while aligning with theoretical principles from the course material. Preprocessing and feature selection techniques addressed potential biases and assumption violations. Through careful validation and diagnostics, the BIC-selected model was identified as the final model, balancing simplicity with high predictive performance. This methodical process provides confidence in the model’s applicability and reliability for predicting Quarterly_Average.
 
 
-# Results
+# Results {#sex-results}
 
 ## 1. Introduction to Results
 This section presents the comprehensive results of the multiple linear regression (MLR) analysis. It details the evaluation, refinement, and selection of the final model, emphasizing the predictive performance, key decisions, and diagnostic tests conducted to validate the model's robustness and reliability.
@@ -79,8 +90,9 @@ The analysis involved testing various models to balance predictive power and int
 - BIC-based Stepwise Regression: Prioritized simpler models to reduce overfitting risks.
 
 ```{r}
-
-library(knitr)
+#| include: false
+#| warning: false
+#| message: false
 
 comparison_table <- data.frame(
   Metric = c(
@@ -266,7 +278,8 @@ Significant Predictors:
 ## 7. Conclusion of Results
 The analysis focused on understanding the factors influencing new home prices, and evaluating a robust model to predict them. Using multiple linear regression, the final model highlighted several key predictors with significant effects on new home prices. For instance, unabsorbed homes had a strong positive impact. Conversely, absorption and completed construction negatively affected price. Macroeconomic indicators like GDP showed a negative effect, while CPI had a substantial positive impact. Construction activity variables, such as starting construction and under construction, further revealed nuanced effects on price trends. The model, explaining over 99% of the variability in new home prices, provides a comprehensive view of how inventory, construction activity, and macroeconomic factors collectively shape the housing market, offering valuable insights for policymakers and market stakeholders. Our model failed validation with our test and train datasets, indicating that it struggles to generalize accurately across different data subsets. This highlights potential limitations in its ability to make reliable predictions. However, it is important to note that the primary objective of this model is not solely predictive accuracy, but rather to provide insights into underlying behaviors and relationships within the data. Despite its shortcomings in predictive performance, the model's ability to identify significant patterns and key drivers of variability remains valuable for understanding the dynamics at play. 
 
-# Conclusion and Limitations
+# Conclusion and Limitations {#sec-limitation}
+
 
 ```{r include-conclusion, echo=FALSE, eval=FALSE}
 # Summarize:
@@ -277,12 +290,19 @@ The analysis focused on understanding the factors influencing new home prices, a
 ```
 
 
-# Ethics Discussion
+# Ethics Discussion {#sex-ethics}
 
-```{r include-ethics, echo=FALSE, eval=FALSE}
-# Discuss the choice of selection methods (manual or automated).
-# Use material from the ethics module to defend your argument.
-```
+The dataset used in this analysis originates from Statistics Canada, a reputable and reliable source, which ensures the data’s credibility. (StatCan) However, the sensitivity of the response variable—house prices—requires careful ethical consideration. Housing affordability impacts individuals and communities significantly, and any conclusions drawn from this analysis may influence public perception or policy decisions.
+
+First, transparency is essential. We document every step of data cleaning, analysis, and model selection to ensure reproducibility and avoid misrepresentation of findings. This transparency fosters trust and helps prevent the ethical pitfalls of obscuring methodology. We are fully aware that the results are closely tied to regional economic factors and GDP. We took extra care to avoid errors that could lead to incorrect conclusions.
+
+Second, respect for sensitivity is paramount. House prices are not just economic indicators; they directly affect people's livelihoods and well-being. It is crucial to present results in a manner that avoids perpetuating inequalities or stigmatizing specific groups or regions. On the other hand, the aim of this paper is to provide insights for policymakers and the estimators. While it is challenging to avoid perpetuate inequalities or stigmatize particular groups or region, we strive to present the results in a way that reflects the data accurately while minimizing harm to any particular group.
+
+Third, fairness in data representation is critical. The predictors—such as sold and unsold houses, construction activity, and rate hikes were analyzed impartially to avoid introducing biases. Any biases identified in the dataset or methodology must be explicitly addressed to maintain the analysis’s integrity.
+
+Finally, as stewards of statistical work, we are responsible for cultivating virtues such as diligence, accountability, and equity, while avoiding vices like negligence or bias. By adhering to these principles, we ensure that the research contributes positively to understanding the impacts of supply-side factors on housing prices in Toronto without causing harm or perpetuating inequities.
+
+\newpage
 
 # References
 

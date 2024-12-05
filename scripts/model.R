@@ -5,3 +5,4 @@ model <- lm(Quarterly_Average ~ Detached_Absorption_Quarterly_Avg +
               rates, 
             data = cost_data_quarterly)
 model
+
