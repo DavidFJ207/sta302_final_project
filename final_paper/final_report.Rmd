@@ -30,9 +30,9 @@ Our literature review confirms that the selected predictors—houses sold, house
 
 For this analysis, the focus will be on identifying and validating the linear relationship between the predictors and the response variable. We will employ exploratory data analysis (EDA) and evaluate model performance using metrics such as AIC, BIC, and adjusted \( R^2 \). Through these statistical methods, we aim to establish that a linear regression relationship exists between house prices and the predictors: the number of available homes, homes sold, homes under construction, homes completed, and rate hikes.
 
-The structure of this paper is as follows: In the @sex-methods section, we describe the dataset acquisition process and the data cleaning steps undertaken for subsequent analysis. @sex-results introduce the result of the linear regression and the validation of the model. @sex-limitation discuss the limitation of the model and dataset selection and processing. Ethics are discussed in @sex-ethics. 
+The structure of this paper is as follows: In the Methods section, we describe the dataset acquisition process and the data cleaning steps undertaken for subsequent analysis. Result section introduce the result of the linear regression and the validation of the model. Limitation section discuss the limitation of the model and dataset selection and processing. Ethics are discussed in the ethics section.
 
-# Methods {#sex-methods}
+# Methods 
 
 ## 1. **Data Preparation**
 - **Tools Used**: Analysis used **R** with `tidyverse` for data handling and `car` for diagnostics.   
@@ -169,10 +169,17 @@ The analysis focused on understanding the factors influencing new home prices, a
 
 # Ethics Discussion {#sex-ethics}
 
-```{r include-ethics, echo=FALSE, eval=FALSE}
-# Discuss the choice of selection methods (manual or automated).
-# Use material from the ethics module to defend your argument.
-```
+The dataset used in this analysis originates from Statistics Canada, a reputable and reliable source, which ensures the data’s credibility. (StatCan) However, the sensitivity of the response variable—house prices—requires careful ethical consideration. Housing affordability impacts individuals and communities significantly, and any conclusions drawn from this analysis may influence public perception or policy decisions.
+
+First, transparency is essential. We document every step of data cleaning, analysis, and model selection to ensure reproducibility and avoid misrepresentation of findings. This transparency fosters trust and helps prevent the ethical pitfalls of obscuring methodology. We are fully aware that the results are closely tied to regional economic factors and GDP. We took extra care to avoid errors that could lead to incorrect conclusions.
+
+Second, respect for sensitivity is paramount. House prices are not just economic indicators; they directly affect people's livelihoods and well-being. It is crucial to present results in a manner that avoids perpetuating inequalities or stigmatizing specific groups or regions. On the other hand, the aim of this paper is to provide insights for policymakers and the estimators. While it is challenging to avoid perpetuate inequalities or stigmatize particular groups or region, we strive to present the results in a way that reflects the data accurately while minimizing harm to any particular group.
+
+Third, fairness in data representation is critical. The predictors—such as sold and unsold houses, construction activity, and rate hikes were analyzed impartially to avoid introducing biases. Any biases identified in the dataset or methodology must be explicitly addressed to maintain the analysis’s integrity.
+
+Finally, as stewards of statistical work, we are responsible for cultivating virtues such as diligence, accountability, and equity, while avoiding vices like negligence or bias. By adhering to these principles, we ensure that the research contributes positively to understanding the impacts of supply-side factors on housing prices in Toronto without causing harm or perpetuating inequities.
+
+\newpage
 
 # References
 
