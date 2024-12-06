@@ -1,0 +1,313 @@
+## Data Preparation
+```{r}
+library(tidyverse)
+library(here)
+library(caret)
+library(car)
+library(corrplot)
+library(broom)
+library(MASS)
+library(lmtest)
+library(Metrics)
+library(dplyr)
+
+# Load the dataset
+data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
+
+# response variable and predictors
+response <- "Quarterly_Average"
+predictors <- c(
+  "Detached_Absorption_Quarterly_Avg",
+  "Detached_Unabsorbed_Quarterly_Avg",
+  "GDP_Quarterly_Avg",
+  "CPI_Quarterly_Avg",
+  "Starting_Detached_Construction",
+  "Under_Construction_Detached",
+  "Completed_Construction_Detached",
+  "rates"
+)
+
+# Subset the relevant data
+selected_data <- data %>%
+  dplyr::select(c(response, all_of(predictors)))
+
+# Clean Data
+
+cleaned_data <- selected_data %>%
+  drop_na()
+
+cleaned_data <- cleaned_data %>%
+  distinct()
+
+
+# Initial regression model
+model <- lm(as.formula(paste(response, "~", paste(predictors, collapse = " + "))), data = cleaned_data)
+
+# Cooks Distance
+cooks_d <- cooks.distance(model)
+
+# Influential points
+influential_points <- which(cooks_d > 4 / (nrow(cleaned_data) - length(model$coefficients)))
+
+# Exclude influential observations
+# cleaned_data <- cleaned_data[-influential_points, ]
+
+# Split the Data
+set.seed(123)
+train_index <- createDataPartition(cleaned_data[[response]], p = 0.5, list = FALSE)
+train_data <- cleaned_data[train_index, ]
+test_data <- cleaned_data[-train_index, ]
+
+list(
+  training_set = train_data,
+  test_set = test_data
+)
+
+```
+
+## Assumptions and Multicollinearity
+
+### Train Data
+```{r}
+
+# Predictors and response
+response <- "Quarterly_Average"
+predictors <- setdiff(names(train_data), c("Quarter", response))
+
+# Data from the training set
+eda_training_data <- train_data%>%
+  dplyr::select(all_of(c(response, predictors)))
+
+# predictors in the training set
+for (predictor in predictors) {
+  p <- ggplot(eda_training_data, aes_string(x = predictor, y = response)) +
+    geom_point(alpha = 0.7) +
+    labs(title = paste("Scatterplot of", response, "vs", predictor, "(Training Set)"),
+         x = predictor, y = response) +
+    theme_minimal()
+  
+  print(p)
+}
+
+# Fit the model using the training set
+model_training <- lm(as.formula(paste(response, "~", paste(predictors, collapse = " + "))), data = eda_training_data)
+summary(model_training)
+
+# residuals and fitted values
+residuals_training <- resid(model_training)
+fitted_values_training <- fitted(model_training)
+
+# VIF
+vif_training <- vif(model_training)
+print(vif_training)
+
+# Linearity
+ggplot(data = NULL, aes(x = fitted_values_training, y = residuals_training)) +
+  geom_point(alpha = 0.7) +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  labs(title = "Residuals vs Fitted Values",
+       x = "Fitted Values",
+       y = "Residuals") +
+  theme_minimal()
+
+# Residuals vs Each Predictor
+for (predictor in predictors) {
+  p <- ggplot(data = eda_training_data, aes_string(x = predictor, y = "residuals_training")) +
+    geom_point(alpha = 0.7) +
+    geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+    labs(title = paste("Residuals vs", predictor),
+         x = predictor, y = "Residuals") +
+    theme_minimal()
+  
+  print(p)
+}
+
+# Normality of Residuals
+qqnorm(residuals_training, main = "Normal Q-Q Plot")
+qqline(residuals_training, col = "red")
+
+
+```
+### Test Data
+```{r}
+response <- "Quarterly_Average"
+predictors <- setdiff(names(test_data), c("Quarter", response))
+
+# test set
+eda_test_data <- test_data %>%
+  dplyr::select(all_of(c(response, predictors)))
+
+for (predictor in predictors) {
+  p <- ggplot(eda_test_data, aes_string(x = predictor, y = response)) +
+    geom_point(alpha = 0.7) +
+    labs(title = paste("Scatterplot of", response, "vs", predictor, "(Test Set)"),
+         x = predictor, y = response) +
+    theme_minimal()
+  
+  print(p) 
+}
+
+# Fit the model using the test set
+model_test <- lm(as.formula(paste(response, "~", paste(predictors, collapse = " + "))), data = eda_test_data)
+summary(model_test)
+
+residuals_test <- resid(model_test)
+fitted_values_test <- fitted(model_test)
+
+# Calculate VIF 
+vif_test <- vif(model_test)
+print(vif_test)
+
+```
+The regression analysis for the **Quarterly Average** response variable demonstrates strong overall model performance. Both the training and test sets exhibit high \(R^2\) values (0.9908 and 0.9957, respectively), indicating that the models explain a significant portion of the variability in the response variable. Significant predictors include **CPI Quarterly Average**, **Detached Unabsorbed Quarterly Average**, and **Under Construction Detached**, consistently highlighting their critical impact on housing trends. However, the presence of high multicollinearity, as evidenced by elevated VIF values for variables like **CPI Quarterly Average** and **GDP Quarterly Average**, suggests a need for further refinement through dimensionality reduction or predictor selection. Residuals are well-distributed, with minimal error, confirming the robustness of the model while also indicating potential for improving simplicity and interpretability.
+
+## Model Building
+  
+```{r}
+library(car)
+library(MASS)
+library(lmtest)
+
+# Transform predictors for non-linearity
+train_data$Detached_Absorption_Quarterly_Avg <- log(train_data$Detached_Absorption_Quarterly_Avg + 1)
+train_data$CPI_Quarterly_Avg <- log(train_data$CPI_Quarterly_Avg + 1)
+train_data$Completed_Construction_Detached <- log(train_data$Completed_Construction_Detached + 1)
+
+
+# Box-Cox transformation for response variable to address skewness and heteroscedasticity
+bc <- boxcox(Quarterly_Average ~ Detached_Absorption_Quarterly_Avg +
+               Detached_Unabsorbed_Quarterly_Avg +
+               Completed_Construction_Detached +
+                                CPI_Quarterly_Avg,
+             data = train_data, plotit = FALSE)
+lambda <- bc$x[which.max(bc$y)]
+
+if (lambda == 0) {
+  train_data$Quarterly_Average <- log(train_data$Quarterly_Average)
+} else {
+  train_data$Quarterly_Average <- (train_data$Quarterly_Average^lambda - 1) / lambda
+}
+
+# Fit the linear regression model
+model <- lm(Quarterly_Average ~ Detached_Absorption_Quarterly_Avg +
+                                    +
+                                   Detached_Unabsorbed_Quarterly_Avg +
+                                   Completed_Construction_Detached +
+                                   CPI_Quarterly_Avg,
+            data = train_data)
+
+
+
+```
+The transformations applied in the code aim to address key violations of regression assumptions identified in the data. Logarithmic transformations were used for predictors such as `Detached_Absorption_Quarterly_Avg`, `Starting_Detached_Construction`, and `Detached_Unabsorbed_Quarterly_Avg` to address non-linearity observed in the scatterplots, ensuring a more linear relationship with the response variable, `Quarterly_Average`. Predictors like `Starting_Semi_Construction` and `Semi_Unabsorbed_Quarterly_Avg` were removed due to their highly non-linear behavior, which made them less suitable for inclusion in the model. Similarly, the Box-Cox transformation was applied to the response variable to correct skewness and heteroscedasticity, ensuring constant variance and improving model accuracy. These adjustments collectively enhance the model's adherence to assumptions, reduce potential bias, and improve interpretability.
+
+```{r}
+
+predictors <- c(
+  "Detached_Absorption_Quarterly_Avg",
+  "Detached_Unabsorbed_Quarterly_Avg",
+  "CPI_Quarterly_Avg",
+  "Completed_Construction_Detached"
+)
+
+# Residuals and fitted values
+residuals_model <- resid(model)
+fitted_values_model <- fitted(model)
+
+# VIF
+vif_model <- vif(model)
+print(vif_model)
+
+# Linearity
+ggplot(data = NULL, aes(x = fitted_values_model, y = residuals_model)) +
+  geom_point(alpha = 0.7) +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  labs(title = "Residuals vs Fitted Values",
+       x = "Fitted Values",
+       y = "Residuals") +
+  theme_minimal()
+
+# Residuals vs Each Predictor
+for (predictor in predictors) {
+  p <- ggplot(data = train_data, aes_string(x = predictor, y = "residuals_model")) +
+    geom_point(alpha = 0.7) +
+    geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+    labs(title = paste("Residuals vs", predictor),
+         x = predictor, y = "Residuals") +
+    theme_minimal()
+  
+  print(p)
+}
+
+# Normality of Residuals
+qqnorm(residuals_model, main = "Normal Q-Q Plot")
+qqline(residuals_model, col = "red")
+
+```
+
+
+### Assumptions and Multicollinearity
+Overall, the model's assumptions are reasonably satisfied. Minor issues with linearity and normality at the tails could be further investigated, but they are not critical. The transformations applied to some predictors appear effective in addressing non-linearity and heteroscedasticity.
+
+
+## Model Diagnostics
+```{r}
+# Model Performance Metrics
+model_summary <- summary(model)
+
+# Extract R^2 and Adjusted R^2
+r_squared <- model_summary$r.squared
+adj_r_squared <- model_summary$adj.r.squared
+
+# AIC and BIC
+aic <- AIC(model)
+bic <- BIC(model)
+
+# RMSE
+residuals <- residuals(model)
+rmse <- sqrt(mean(residuals^2))
+
+# Results
+cat("Model Performance Metrics:\n")
+cat("R-squared: ", round(r_squared, 4), "\n")
+cat("Adjusted R-squared: ", round(adj_r_squared, 4), "\n")
+cat("AIC: ", round(aic, 4), "\n")
+cat("BIC: ", round(bic, 4), "\n")
+cat("RMSE: ", round(rmse, 4), "\n")
+
+```
+
+The regression model demonstrates a strong overall fit, with an R-squared of 0.9832 and an Adjusted R-squared of 0.9807, indicating that the predictors explain a significant portion of the response variable's variability while maintaining robustness. The low RMSE (5.4798) reflects good predictive accuracy, and the AIC (263.6004) and BIC (275.4225) suggest a reasonable balance between model complexity and fit. These metrics highlight the model's effectiveness, though addressing minor residual patterns could further enhance its performance.
+
+## Model Validation
+
+```{r}
+
+# Predict on test_data
+predictions <- predict(model, newdata = test_data)
+
+# Calculate residuals
+residuals <- test_data$Quarterly_Average - predictions
+
+# Compute MSE for test_data
+mse_test <- mean(residuals^2)
+cat("Mean Squared Error (MSE) on Test Data:", mse_test, "\n")
+
+# R-squared for test_data
+ss_total <- sum((test_data$Quarterly_Average - mean(test_data$Quarterly_Average))^2)
+ss_residual <- sum(residuals^2)
+r_squared_test <- 1 - (ss_residual / ss_total)
+cat("R-squared on Test Data:", r_squared_test, "\n")
+
+# Print validation results
+cat("Validation Results:\n")
+cat("Mean Squared Error (Test Data):", mse_test, "\n")
+cat("R-squared (Test Data):", r_squared_test, "\n")
+
+```
+The model's performance on the test data indicates significant issues. The **Mean Squared Error (MSE)** is exceptionally high (\(1.303812 \times 10^{15}\)), demonstrating substantial deviations between predicted and actual values. Additionally, the **R-squared** is highly negative (\(-4.163317 \times 10^{12}\)), indicating that the model performs far worse than simply using the mean of the response variable. These results suggest the model fails to generalize effectively to unseen data.
+
+
+```{r}
+saveRDS(model, file = here("data", "final_model.rds"))
+```
