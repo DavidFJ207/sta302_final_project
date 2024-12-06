@@ -10,9 +10,12 @@ output:
     toc_depth: 2
 ---
 
+\setlength{\parindent}{2em}
+
 # Contributions
-- **Gadiel David Flores:** Methods, flowchart and Results
-- **Wendy Huang:** Description of contributions.
+
+-   **Gadiel David Flores:** Methods, flowchart and Results
+-   **Wendy Huang:** Description of contributions.
 
 \newpage
 
@@ -30,13 +33,14 @@ In the context of rate hikes, the CEPR report discusses their inclusion in econo
 
 Our literature review confirms that the selected predictors—houses sold, houses constructed, houses under construction, unsold houses, and rate hikes—have been previously studied and exhibit a linear relationship with house prices. Linear regression is recognized as a valid method for this analysis, offering a clear way to quantify the relationships between house prices (the response) and these predictors. The validity of the linear relationship will be tested and thoroughly discussed later, as this is a key objective of this paper.
 
-For this analysis, the focus will be on identifying and validating the linear relationship between the predictors and the response variable. We will employ exploratory data analysis (EDA) and evaluate model performance using metrics such as AIC, BIC, and adjusted \( R^2 \). Through these statistical methods, we aim to establish that a linear regression relationship exists between house prices and the predictors: the number of available homes, homes sold, homes under construction, homes completed, and rate hikes.
+For this analysis, the focus will be on identifying and validating the linear relationship between the predictors and the response variable. We will employ exploratory data analysis (EDA) and evaluate model performance using metrics such as AIC, BIC, and adjusted $R^2$. Through these statistical methods, we aim to establish that a linear regression relationship exists between house prices and the predictors: the number of available homes, homes sold, homes under construction, homes completed, and rate hikes.
 
 The structure of this paper is as follows: In the Methods section, we describe the dataset acquisition process and the data cleaning steps undertaken for subsequent analysis. Result section introduce the result of the linear regression and the validation of the model. Limitation section discuss the limitation of the model and dataset selection and processing. Ethics are discussed in the ethics section.
 
-\newpage 
+\newpage
+
 # Methods
-\setlength{\parindent}{2em} 
+
 ```{r}
 #| echo: false
 #| eval: true
@@ -57,26 +61,30 @@ knitr::include_graphics(here::here("final_paper", "flow_chart.png"))
 ```
 
 ## 1. Data Preparation
+
 To prepare the data for analysis, we used `tidyverse` for data manipulation and `car` for diagnostics. The New Housing Price Index (NHPI) was defined as the response variable, with 13 predictors identified, including absorption rates, GDP, CPI, and construction statistics. The dataset was cleaned by removing missing values, duplicate observations, and influential outliers identified using Cook's Distance. Finally, the data was randomly split into training (50%) and testing (50%) sets to ensure unbiased and robust analysis.
 
 ## 2. Assumptions and Multicollinearity
+
 The model's assumptions were validated using residual plots, Q-Q plots, and statistical tests like Cook’s Distance. Linearity and homoscedasticity were assessed through residuals vs. fitted values and residuals vs. predictors plots, while normality of residuals was evaluated with Q-Q plots and histograms, which showed minor deviations in the tails. These diagnostic checks ensured the model's validity and strengthened confidence in its results and inferences.
 
 We used `ggplot2` for visualizations and `car` for diagnostics to explore the relationships between predictors and the response variable. Scatterplots and Variance Inflation Factors (VIF) were used to verify linearity and identify multicollinearity issues among predictors. Exploratory data analysis (EDA) was conducted on both training and test datasets to ensure consistency in variable distributions and to detect any anomalies. Multicollinearity was addressed through transformations, which improved model accuracy by refining variable relationships.
 
 ## 3. Model Building
+
 Using the `lm` function in R, an initial regression model was constructed by selecting predictors based on their theoretical relevance and statistical significance. To improve model performance, log transformations were applied to skewed predictors to enhance linearity, and a Box-Cox transformation was used on the response variable to correct residual skewness and stabilize variance. The final model was refined through rigorous diagnostic checks, ensuring it adhered to regression assumptions and achieved optimal accuracy.
 
 ## 4. Model Diagnostics
+
 After implementing transformations and adjustments, diagnostics were rechecked using residual plots to confirm improvements in linearity, homoscedasticity, and normality. Cook’s Distance was revisited to ensure no new influential points emerged, and Variance Inflation Factor (VIF) values were reassessed to verify acceptable multicollinearity levels. These steps validated the effectiveness of our transformations and actions; if any issues persisted, the process was revisited at Step 3 to refine the model further.
 
 ## 5. Model Performance
-Model performance was assessed using metrics such as \( R^2 \), Adjusted \( R^2 \), AIC, BIC, and RMSE. These metrics demonstrated a strong fit, indicating that the model explained the majority of the variability in the response variable. The RMSE highlighted high predictive accuracy, and most predictors were statistically significant, confirming the model's reliability and effectiveness in capturing key relationships.
+
+Model performance was assessed using metrics such as $R^2$, Adjusted $R^2$, AIC, BIC, and RMSE. These metrics demonstrated a strong fit, indicating that the model explained the majority of the variability in the response variable. The RMSE highlighted high predictive accuracy, and most predictors were statistically significant, confirming the model's reliability and effectiveness in capturing key relationships.
 
 ## 6. Model Validation
-Model validation was conducted using performance metrics on test data to assess its generalizability and predictive accuracy. Key metrics, such as Mean Squared Error (MSE) and \( R^2 \), were calculated to evaluate how well the model performed on unseen data. These results confirmed the model's ability to maintain high accuracy and reliability when applied to new datasets.
 
-
+Model validation was conducted using performance metrics on test data to assess its generalizability and predictive accuracy. Key metrics, such as Mean Squared Error (MSE) and $R^2$, were calculated to evaluate how well the model performed on unseen data. These results confirmed the model's ability to maintain high accuracy and reliability when applied to new datasets.
 
 # Results {#sec-results}
 
@@ -86,7 +94,7 @@ We begin by identifying influential observations. Although removing influential 
 
 The regression analysis conducted for the NHPI response variable exhibits a strong fit on the training data, with an R-squared value of 0.9832 and an Adjusted R-squared of 0.9807, indicating that the predictors explain over 98% of the variability in the response. These metrics demonstrate excellent explanatory power while balancing robustness, as the Adjusted R-squared accounts for the number of predictors in the model. Additionally, the Root Mean Squared Error (RMSE) of 5.4798 reflects low average deviations between predicted and observed values, while the Akaike Information Criterion (AIC) of 263.6004 and Bayesian Information Criterion (BIC) of 275.4225 suggest a reasonable trade-off between model complexity and fit.
 
-Key predictors such as CPI, Unabsorbed Homes, and Completed Construction Homes emerged as significant contributors to the model, with consistently low p-values and strong relationships with the response variable. However, issues of multicollinearity remain evident, as demonstrated by high Variance Inflation Factor (VIF) values for predictors like CPI, GDP and Detached Absorption. Multicollinearity inflates standard errors, potentially reducing the reliability of coefficient estimates, which warrants further refinement, such as variable selection or dimensionality reduction. For this reason, the GDP predictor was removed due to its high VIF and lack of significance, along with starting Construction Homes, and Under Construction Homes as they were not of high significance.
+Key predictors such as CPI, Unabsorbed Homes, and Completed Construction Homes emerged as significant contributors to the model, with consistently low p-values and strong relationships with the response variable. However, issues of multicollinearity remain evident, as demonstrated by high Variance Inflation Factor (VIF) values for predictors like CPI, GDP and Absorption. Multicollinearity inflates standard errors, potentially reducing the reliability of coefficient estimates.
 
 Transformations applied to the predictors, such as logarithmic adjustments to Absorption, Completed Construction, and Unabsorbed homes, addressed non-linear relationships observed in the scatterplots, improving the linearity assumption of regression. The removal of predictors like GDP, and Starting Construction was motivated by their non-significant p-values and high multicollinearity, streamlining the model while retaining its predictive power. Additionally, the application of a Box-Cox transformation to the response variable mitigated issues of skewness and heteroscedasticity, ensuring constant variance across the fitted values.
 
@@ -104,13 +112,13 @@ img4 <- rasterGrob(png::readPNG(here::here("final_paper", "resid_v_fitted.png"))
 grid.arrange(img1, img2, img3, img4, ncol = 2)
 ```
 
-Residual diagnostic plots indicate that the model reasonably satisfies the key assumptions of linear regression. Residuals are well-centered around zero, with no clear patterns in residuals versus fitted values, suggesting that the linearity and homoscedasticity assumptions are mostly satisfied. 
+Residual diagnostic plots indicate that the model reasonably satisfies the key assumptions of linear regression. Residuals are well-centered around zero, with no clear patterns in residuals versus fitted values, suggesting that the linearity and homoscedasticity assumptions are mostly satisfied.
 
-After applying all the necessary transformations to address non-linearity and improve model fit, the updated regression model demonstrated strong performance metrics. The \( R^2 \) value of 0.9742 indicates that 97.42% of the variance in the response variable is explained by the predictors, with an adjusted \( R^2 \) of 0.9712 accounting for the number of predictors used. The model's Akaike Information Criterion (AIC) of 237.3722 and Bayesian Information Criterion (BIC) of 247.5055 suggest a well-optimized model with minimal overfitting. Additionally, the Root Mean Squared Error (RMSE) of 4.048 confirms a low average prediction error, indicating that the transformations significantly improved the model's predictive accuracy.
+After applying all the necessary transformations to address non-linearity and improve model fit, the updated regression model demonstrated strong performance metrics. The $R^2$ value of 0.9742 indicates that 97.42% of the variance in the response variable is explained by the predictors, with an adjusted $R^2$ of 0.9712 accounting for the number of predictors used. The model's Akaike Information Criterion (AIC) of 237.3722 and Bayesian Information Criterion (BIC) of 247.5055 suggest a well-optimized model with minimal overfitting. Additionally, the Root Mean Squared Error (RMSE) of 4.048 confirms a low average prediction error, indicating that the transformations significantly improved the model's predictive accuracy.
 
-Despite strong performance metrics on the training data, the model's performance on the test set highlights significant shortcomings. The Mean Squared Error (MSE) on the test data is alarmingly high (\(1.303812 \times 10^{15}\)), and the R-squared value is highly negative (\(-4.163317 \times 10^{12}\)), indicating that the model fails to generalize to unseen data. These results suggest severe overfitting, where the model captures noise in the training set rather than generalizable patterns, rendering it ineffective for prediction.
+Despite strong performance metrics on the training data, the model's performance on the test set highlights significant shortcomings. The Mean Squared Error (MSE) on the test data is alarmingly high ($1.303812 \times 10^{15}$), and the R-squared value is highly negative ($-4.163317 \times 10^{12}$), indicating that the model fails to generalize to unseen data. These results suggest severe overfitting, where the model captures noise in the training set rather than generalizable patterns, rendering it ineffective for prediction.
 
-Overall, while the regression model demonstrates robust explanatory power on the training data, its inability to perform on the test data necessitates further investigation. Reassessing the training and test data for consistency, incorporating regularization techniques like Ridge or Lasso regression to address overfitting, and exploring alternative predictors or interaction terms could enhance the model’s generalizability. These steps are essential to achieve a balance between strong explanatory performance and predictive accuracy in real-world applications.
+Overall, while the regression model demonstrates robust explanatory power on the training data, its limited performance on the test data is less concerning as the main objective of this model is explanatory rather than predictive. The model effectively identifies key relationships and provides valuable insights into the factors influencing the response variable, which aligns with its intended purpose. As an explanatory tool, the model serves its purpose well by shedding light on underlying patterns and relationships.
 
 ```{r}
 #| echo: false
@@ -136,10 +144,9 @@ kable(model_summary,
 
 ```
 
-\newpage 
+\newpage
 
 # Conclusion and Limitations {#sec-limitation}
-
 
 ```{r include-conclusion, echo=FALSE, eval=FALSE}
 # Summarize:
@@ -148,7 +155,6 @@ kable(model_summary,
 # Discuss:
 # - Any unresolved limitations, such as violated assumptions or data issues.
 ```
-
 
 # Ethics Discussion {#sec-ethics}
 
@@ -169,4 +175,3 @@ Finally, as stewards of statistical work, we are responsible for cultivating vir
 ```{r references, echo=FALSE, eval=FALSE}
 
 ```
-
