@@ -14,8 +14,8 @@ output:
 
 # Contributions
 
--   **Gadiel David Flores:** Methods, flowchart and Results
--   **Wendy Huang:** Introduction and Ethnic Discussion
+-   **Gadiel David Flores:** Data Processing, Methods, flowchart and Results
+-   **Wendy Huang:** Introduction ,Conclusion, Limitation and Ethnic Discussion
 
 \newpage
 
@@ -23,13 +23,13 @@ output:
 
 Housing affordability has become a pressing issue in many urban cities, including Toronto, where rising house prices have placed both homeowners and tenants out of reach for many years. This paper is conducted to investigating several key house indicators to the influence of house price. This is essential for policymakers , real estate professionals and potential homeowners seeking to navigate this challenging market.
 
-Based on prior experience, we hypothesize that housing demand, supply, and inflation are key determinants of house prices. To test this hypothesis, we identified critical indicators representing these factors: house absorption, construction activity, and the Consumer Price Index (CPI), which serves as a proxy for investment conditions. We sourced dataset with relevant predictors from Statistics Canada and conducted an in-depth analysis of the variables. After cleaning the data and assessing multicollinearity using the Variance Inflation Factor (VIF), we refined our predictors to include CPI, unabsorbed homes, and completed construction homes as the most relevant variables.This study employs a multiple linear regression model to examine the relationship between house prices and these predictors, providing insights into the factors that drive housing market dynamics.
+Based on prior experience, we hypothesize that housing demand, supply, and inflation are key determinants of house prices. To test this hypothesis, we identified critical indicators representing these factors: house absorption, construction activity, and the Consumer Price Index (CPI), which serves as a proxy for investment conditions. We sourced dataset with relevant predictors from Statistics Canada (Government of Canada, Statistics Canada, 2017) and conducted an in-depth analysis of the variables. After cleaning the data and assessing multicollinearity using the Variance Inflation Factor (VIF), we refined our predictors to include CPI, unabsorbed homes, and completed construction homes as the most relevant variables.This study employs a multiple linear regression model to examine the relationship between house prices and these predictors, providing insights into the factors that drive housing market dynamics.
 
-We conducted literature reviews to validate the selection of our predictors based on prior studies. Housing supply is consistently shown to be a critical factor influencing house prices. Research indicates that higher sales activity (houses sold) is often associated with increased demand, which drives prices upward. Conversely, an oversupply of unsold houses tends to push prices downward. These relationships are commonly examined using hedonic and linear regression models, where transactional data serve as key predictors for estimating price changes effectively (@housepriceprediction).
+We conducted literature reviews to validate the selection of our predictors based on prior studies. Housing supply is consistently shown to be a critical factor influencing house prices. Research indicates that higher sales activity (houses sold) is often associated with increased demand, which drives prices upward. Conversely, an oversupply of unsold houses tends to push prices downward. These relationships are commonly examined using hedonic and linear regression models, where transactional data serve as key predictors for estimating price changes effectively (Geerts et al., 2023).
 
-The number of newly constructed and completed houses influences house prices by affecting market supply. An increase in construction tends to stabilize prices by meeting demand, while lower construction rates can contribute to supply constraints and higher prices. "Global House Prices: Trends and Cycles" highlights the influence of new constructions and completions on house prices. Regression analyses reveal that increases in supply through construction stabilize prices, while supply shortages contribute to price hikes (@housingmarkets)
+The number of newly constructed and completed houses influences house prices by affecting market supply. An increase in construction tends to stabilize prices by meeting demand, while lower construction rates can contribute to supply constraints and higher prices. "Global House Prices: Trends and Cycles" highlights the influence of new constructions and completions on house prices (Gnan, 2021). Regression analyses reveal that increases in supply through construction stabilize prices, while supply shortages contribute to price hikes 
 
-In the context of CPI, the CEPR report discusses their inclusion in econometric models to study the effects of borrowing costs on housing affordability and prices. It finds that higher CPI indicates higher inflation, reflected in higher mortgage rates and reducing both housing demand and price growth, a relationship frequently captured through regression techniques (@whatdriveshouseprices)
+In the context of CPI, the CEPR report discusses their inclusion in econometric models to study the effects of borrowing costs on housing affordability and prices (Muellbauer & Murphy, 2021). It finds that higher CPI indicates higher inflation, reflected in higher mortgage rates and reducing both housing demand and price growth, a relationship frequently captured through regression techniques 
 
 Our literature review confirms that the selected predictors—CPI, unabsorbed homes, and completed construction homes—have been previously studied and exhibit a linear relationship with house prices. Linear regression is recognized as a valid method for this analysis, offering a clear way to quantify the relationships between house price (the response) and these predictors. The validity of the linear relationship will be tested and thoroughly discussed later, as this is a key objective of this paper.
 
@@ -64,13 +64,13 @@ knitr::include_graphics(here::here("final_paper", "flow_chart.png"))
 
 According to the topic of house prices and its influencers, we download the dataset with relevant predictors from Statistics Canada (Statistics Canada, 2024). The New Housing Price Index (NHPI) was defined as the response variable, with 13 predictors identified, including absorption (detached-absorption, semi-absorption, detached-unabsorbed, semi-unabsorbed), GDP, CPI, and construction (starting-detached-construction, starting-semi-construction, under construction detached, under construction-semi, completed-construction-detached, completed-construction-semi). 
 
-To prepare the data for analysis, we used `tidyverse` for data manipulation and `car` for diagnostics. The dataset was cleaned by removing missing values, duplicate observations, and influential outliers identified using Cook's Distance. Finally, the data was randomly split into training (50%) and testing (50%) sets to ensure unbiased and robust analysis.
+To prepare the data for analysis, we used `tidyverse` for data manipulation and `car` for diagnostics (The R project for statistical computing, 2023). The dataset was cleaned by removing missing values, duplicate observations, and influential outliers identified using Cook's Distance. Finally, the data was randomly split into training (50%) and testing (50%) sets to ensure unbiased and robust analysis.
 
 ## 2. Assumptions and Multicollinearity
 
 The model's assumptions were validated using residual plots, Q-Q plots, and statistical tests like Cook’s Distance. Linearity and homoscedasticity were assessed through residuals vs. fitted values and residuals vs. predictors plots, while normality of residuals was evaluated with Q-Q plots and histograms, which showed minor deviations in the tails. These diagnostic checks ensured the model's validity and strengthened confidence in its results and inferences.
 
-We used `ggplot2` for visualizations and `car` for diagnostics to explore the relationships between predictors and the response variable. Scatterplots and Variance Inflation Factors (VIF) were used to verify linearity and identify multicollinearity issues among predictors. Exploratory data analysis (EDA) was conducted on both training and test datasets to ensure consistency in variable distributions and to detect any anomalies. Multicollinearity was addressed through transformations, which improved model accuracy by refining variable relationships.
+We used `ggplot2` for visualizations and `car` for diagnostics to explore the relationships between the 13 relavent predictors and the response variable (NHPI). Scatterplots and Variance Inflation Factors (VIF) were used to verify linearity and identify multicollinearity issues among predictors. Exploratory data analysis (EDA) was conducted on both training and test datasets to ensure consistency in variable distributions and to detect any anomalies. Multicollinearity was addressed through transformations, which improved model accuracy by refining variable relationships.
 
 ## 3. Model Building
 
@@ -90,7 +90,7 @@ Model validation was conducted using performance metrics on test data to assess 
 
 # Results 
 
-This section presents the results of the multiple linear regression (MLR) analysis. The response variable for this analysis was the New Housing Price Index (NHPI), and eight predictors were selected to represent factors such as absorption, interest rates, GDP, CPI, and various housing construction metrics(). These predictors were chosen based on their theoretical relevance to housing price trends and their potential statistical significance. The focus of this model is explanatory, as the aim is to understand the relationships between variables.
+This section presents the results of the multiple linear regression (MLR) analysis. The response variable for this analysis was the New Housing Price Index (NHPI), and thirteen predictors were selected to represent factors such as absorption (detached- absorption, semi-absorption, detached-unabsorbed, semi-unabsorbed), interest rates, GDP, CPI, and various housing construction metrics(starting-detached-construction, starting-semi-construction,  under construction detached, under construction-semi, completed-construction-detached, completed-construction-semi). These predictors were chosen based on their theoretical relevance to housing price trends and their potential statistical significance. The focus of this model is explanatory, as the aim is to understand the relationships between variables.
 
 We begin by identifying influential observations. Although removing influential observations (rows 1 and 4) improved model fit and precision, we decided against excluding them to avoid overfitting and to maintain the integrity of the dataset.
 
@@ -148,19 +148,18 @@ kable(model_summary,
 
 \newpage
 
-# Conclusion and Limitations {#sec-limitation}
+# Conclusion and Limitations 
 
-```{r include-conclusion, echo=FALSE, eval=FALSE}
-# Summarize:
-# - How the final model answers the research question.
-# - Broader significance of the model.
-# Discuss:
-# - Any unresolved limitations, such as violated assumptions or data issues.
-```
+The final regression model effectively addresses the research question by identifying key relationships between the New Housing Price Index (NHPI) and its significant predictors, namely, CPI, Unabsorbed Homes, and Completed Construction Homes. The New Housing Price Index (NHPI) exhibits a positive relationship with the Consumer Price Index (CPI), completed construction homes, and absorption, while showing a negative relationship with unabsorbed homes. Additionally, although GDP and starting construction were removed from the final model due to a lack of statistical significance, both variables demonstrate a positive influence on the NHPI. These relationships suggest that housing prices are shaped by a delicate balance of demand-side pressures (CPI, Absorption) and supply-side constraints (Unabsorbed Homes, Completed Construction). The positive and negative effects of these predictors align with economic theory, underscoring the utility of the model for understanding housing market dynamics.
+
+The final model explains a substantial portion of the variability in NHPI with an adjusted $R^2$ of 0.9712,indicating that 97.12% of the variation in NHPI is explained by the selected predictors. Transformations, such as logarithmic adjustments to variables like Absorption, Completed Construction Homes, and Unabsorbed Homes, successfully addressed non-linearity, making them suitable for regression analysis.
+The Box-Cox transformation normalizing its distribution and ensuring that the model assumptions were better satisfied. All the transformations improves the model's explanatory power and ensuring compliance with key linear regression assumptions.
+
+The findings emphasize the need for careful consideration of both theoretical and statistical relevance when selecting predictors. This model serves as a valuable tool for understanding market dynamics rather than precise forecasting, i.e. this is a descriptive model more than a predictive model. Future studies could address these limitations by employing alternative modeling approaches. For example, the high varaiance inflaction factor values (VIF) for predictor such as CPI and Absorption suggest intercorrelations that inflate standard errors, potentially affecting the reliability of individual coefficient estimates. Since this model focus on the explanatory instead of prediction, the model performs poor on test data with a negative $R^2$ and sightly high Mean Squared Error (MSE). This also shows that while the model explains patterns within the training set, it struggles to generalize to new data, limiting its predictive reliability. What's more ,the exclusion of theoretically relevant predictors, such as GDP and Starting Construction, due to multicollinearity or insignificance, may limit the comprehensiveness of the model. Additionally, the decision not to remove influential observations (rows 1 and 4) to preserve dataset integrity could introduce noise or bias into the analysis. By building on this work, future research can deepen our understanding of housing price determinants and improve strategies for managing market volatility.
 
 # Ethics Discussion
 
-The dataset used in this analysis originates from Statistics Canada, a reputable and reliable source, which ensures the data’s credibility (Statistics Canada, 2024). However, the sensitivity of the response variable—house prices—requires careful ethical consideration. Housing affordability impacts individuals and communities significantly, and any conclusions drawn from this analysis may influence public perception or policy decisions.
+The dataset used in this analysis originates from Statistics Canada, a reputable and reliable source, which ensures the data’s credibility (Government of Canada, 2024). However, the sensitivity of the response variable—house prices—requires careful ethical consideration. Housing affordability impacts individuals and communities significantly, and any conclusions drawn from this analysis may influence public perception or policy decisions.
 
 First, transparency is essential. We document every step of data cleaning, analysis, and model selection to ensure reproducibility and avoid misrepresentation of findings. This transparency fosters trust and helps prevent the ethical pitfalls of obscuring methodology. We are fully aware that the results are closely tied to regional economic factors like GDP and CPI. We took extra care to avoid errors that could lead to incorrect conclusions.
 
@@ -174,6 +173,16 @@ Finally, as stewards of statistical work, we are responsible for cultivating vir
 
 # References
 
-```{r references, echo=FALSE, eval=FALSE}
+Geerts, M., vanden Broucke, S., & De Weerdt, J. (2023, May 14). A survey of methods and input data types for house price prediction. MDPI. https://doi.org/10.3390/ijgi12050200 
 
-```
+Gnan, E. (2021, June 25). Monetary policy and housing markets: Interactions and side effects. ECOSCOPE. https://oecdecoscope.blog/2021/06/25/monetary-policy-and-housing-markets-interactions-and-side-effects/ 
+
+Government of Canada, S. C. (2024, December 5). Statistics Canada: Canada’s National Statistical Agency. Statistics Canada: Canada’s national statistical agency. https://www.statcan.gc.ca/en/start 
+
+Government of Canada, Statistics Canada, S. C. (2017, March 9). New housing price index (2007=100). https://doi.org/10.25318/1810005201-eng 
+
+Government of Canada, Statistics Canada, S. C. (2024, November 19). Consumer price index, monthly, not seasonally adjusted. Consumer Price Index, monthly, not seasonally adjusted. https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000401 
+
+Muellbauer, J., & Murphy, A. (2021). What drives house prices: Lessons from the literature | CEPR. https://cepr.org/voxeu/columns/what-drives-house-prices-lessons-literature 
+
+R Foundation for Statistical Computing (Ed.). (2023). The R project for statistical computing. R. https://www.r-project.org/ 
