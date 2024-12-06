@@ -41,31 +41,7 @@ Moreover, the datasets underwent thorough cleaning processes to ensure accuracy,
 # Preliminary Results 
 Focusing on the New Housing Price Index (NHPI) as the response variable, We will analyze economic, construction, and financial predictors such as construction activity, interest rates, and GDP. 
 
-## 1. Data Preparation
-
-- Tools Used: Analysis was conducted in R using `tidyverse` for data manipulation and `car` for diagnostics.  
-
-- Steps Taken:  
-  - Defined New Housing Price Index (NHPI) as the response variable and identified predictors:  
-  1. Detached Absorption (Quarterly Average) 
-  2. Semi Absorption (Quarterly Average)  
-  3. Detached Unabsorbed Homes (Quarterly Average)  
-  4. Semi Unabsorbed Homes (Quarterly Average)  
-  5. GDP (Quarterly Average)  
-  6. CPI (Quarterly Average) 
-  7. Starting Detached Construction 
-  8. Starting Semi-Detached Construction 
-  9. Under Construction Detached Homes  
-  10. Under Construction Semi-Detached Homes 
-  11. Completed Construction Semi-Detached  
-  12. Completed Construction Detached  
-  13. Rate Hikes
-  - Removed missing values and outliers using Cook’s Distance.
-  - Merged datasets from 1997–2016 
-  - Split the Data:  
-    - Divided the dataset into training and test/validation sets.  
-    - Used a common split, such as 50/50, to ensure both subsets are sufficiently large.  
-    - Performed the split randomly to avoid sampling bias.  
+## Data Preparation
 ```{r}
 library(tidyverse)
 library(here)
@@ -76,6 +52,7 @@ library(broom)
 library(MASS)
 library(lmtest)
 library(Metrics)
+library(dplyr)
 
 # Load the dataset
 data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
@@ -104,29 +81,27 @@ selected_data <- data %>%
 
 # Clean Data
 
-## Handle missing values
 cleaned_data <- selected_data %>%
   drop_na()
 
-## Remove duplicates
 cleaned_data <- cleaned_data %>%
   distinct()
 
 
-# Fit an initial regression model
+# Initial regression model
 model <- lm(as.formula(paste(response, "~", paste(predictors, collapse = " + "))), data = cleaned_data)
 
-# Calculate Cook's Distance
+# Cooks Distance
 cooks_d <- cooks.distance(model)
 
-# Identify influential points
+# Influential points
 influential_points <- which(cooks_d > 4 / (nrow(cleaned_data) - length(model$coefficients)))
 
 # Exclude influential observations
-cleaned_data <- cleaned_data[-influential_points, ]
+# cleaned_data <- cleaned_data[-influential_points, ]
 
 # Split the Data
-set.seed(123) # Ensure reproducibility
+set.seed(123)
 train_index <- createDataPartition(cleaned_data[[response]], p = 0.5, list = FALSE)
 train_data <- cleaned_data[train_index, ]
 test_data <- cleaned_data[-train_index, ]
@@ -136,20 +111,10 @@ list(
   test_set = test_data
 )
 
-
 ```
 
-## 2. Assumptions and Multicollinearity
-- Tools Used: `ggplot2` for visualization 
-- Key Insights:  
-  - Scatterplots indicated potential linear relationships between predictors and NHPI.  
-  - Variance Inflation Factors (VIFs) flagged multicollinearity among construction-related predictors, necessitating feature selection or transformation.  
-  - Outliers were identified, influencing NHPI trends, and removed to enhance model accuracy.  
-  - Explore Training and Test Sets:  
-    - Performed EDA on both `training_set` and `test_set` to ensure consistency and reliability.  
-    - Compared distributions, means, variances, and shapes of variables across both sets to ensure similarity.  
-    - Checked for any skews, extreme observations, or discrepancies between the training and test sets that could impact model generalizability.
-    
+## Assumptions and Multicollinearity
+
 ### Train Data
 ```{r}
 
@@ -158,15 +123,13 @@ response <- "Quarterly_Average"
 predictors <- setdiff(names(train_data), c("Quarter", response))
 
 # Data from the training set
-eda_training_data <- train_data %>%
-  select(all_of(c(response, predictors)))
+eda_training_data <- train_data%>%
+  dplyr::select(all_of(c(response, predictors)))
 
-### **1. Visualize Relationships in Training Set** ###
-# Scatterplots for predictors in the training set
+# predictors in the training set
 for (predictor in predictors) {
   p <- ggplot(eda_training_data, aes_string(x = predictor, y = response)) +
     geom_point(alpha = 0.7) +
-    geom_smooth(method = "lm", color = "blue", se = FALSE) +
     labs(title = paste("Scatterplot of", response, "vs", predictor, "(Training Set)"),
          x = predictor, y = response) +
     theme_minimal()
@@ -178,17 +141,39 @@ for (predictor in predictors) {
 model_training <- lm(as.formula(paste(response, "~", paste(predictors, collapse = " + "))), data = eda_training_data)
 summary(model_training)
 
-# Extract residuals and fitted values
+# residuals and fitted values
 residuals_training <- resid(model_training)
 fitted_values_training <- fitted(model_training)
 
-# Calculate VIF
+# VIF
 vif_training <- vif(model_training)
 print(vif_training)
 
-# Influential points using Cook's Distance
-cooks_d_training <- cooks.distance(model_training)
-influential_points_training <- which(cooks_d_training > 4 / (nrow(eda_training_data) - length(model_training$coefficients)))
+# Linearity
+ggplot(data = NULL, aes(x = fitted_values_training, y = residuals_training)) +
+  geom_point(alpha = 0.7) +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  labs(title = "Residuals vs Fitted Values",
+       x = "Fitted Values",
+       y = "Residuals") +
+  theme_minimal()
+
+# Residuals vs Each Predictor
+for (predictor in predictors) {
+  p <- ggplot(data = eda_training_data, aes_string(x = predictor, y = "residuals_training")) +
+    geom_point(alpha = 0.7) +
+    geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+    labs(title = paste("Residuals vs", predictor),
+         x = predictor, y = "Residuals") +
+    theme_minimal()
+  
+  print(p)
+}
+
+# Normality of Residuals
+qqnorm(residuals_training, main = "Normal Q-Q Plot")
+qqline(residuals_training, col = "red")
+
 
 ```
 ### Test Data
@@ -198,13 +183,11 @@ predictors <- setdiff(names(test_data), c("Quarter", response))
 
 # test set
 eda_test_data <- test_data %>%
-  select(all_of(c(response, predictors)))
+  dplyr::select(all_of(c(response, predictors)))
 
-# Scatterplots
 for (predictor in predictors) {
   p <- ggplot(eda_test_data, aes_string(x = predictor, y = response)) +
     geom_point(alpha = 0.7) +
-    geom_smooth(method = "lm", color = "blue", se = FALSE) +
     labs(title = paste("Scatterplot of", response, "vs", predictor, "(Test Set)"),
          x = predictor, y = response) +
     theme_minimal()
@@ -223,41 +206,30 @@ fitted_values_test <- fitted(model_test)
 vif_test <- vif(model_test)
 print(vif_test)
 
-# Identify influential points
-cooks_d_test <- cooks.distance(model_test)
-influential_points_test <- which(cooks_d_test > 4 / (nrow(eda_test_data) - length(model_test$coefficients)))
-
 ```
-Our analysis revealed that housing prices are influenced by various factors, such as absorption rates, unabsorbed homes, and economic indicators like GDP and CPI. Some predictors, like unabsorbed homes and GDP, have a strong and significant effect, while others, like construction starts, show weaker or inconsistent relationships. However, the strong connection between certain predictors, like GDP and CPI, makes it harder to separate their individual impacts, which complicates the analysis. By addressing these overlaps and focusing on the most reliable factors, we can build a clearer and more accurate model for understanding housing price trends.
+The regression analysis for the **Quarterly Average** response variable demonstrates strong overall model performance. Both the training and test sets exhibit high \(R^2\) values (0.9908 and 0.9957, respectively), indicating that the models explain a significant portion of the variability in the response variable. Significant predictors include **CPI Quarterly Average**, **Detached Unabsorbed Quarterly Average**, and **Under Construction Detached**, consistently highlighting their critical impact on housing trends. However, the presence of high multicollinearity, as evidenced by elevated VIF values for variables like **CPI Quarterly Average** and **GDP Quarterly Average**, suggests a need for further refinement through dimensionality reduction or predictor selection. Residuals are well-distributed, with minimal error, confirming the robustness of the model while also indicating potential for improving simplicity and interpretability.
 
-## 3. Model Building
-- Tools Used: `lm` in R for linear regression modeling.  
-- Steps Taken:  
-  - Conducted all model building, assessments, and diagnostics on the train_data to ensure the model generalizes well to unseen data.  
-  - Included key predictors based on theoretical relevance and statistical significance.  
-  - Applied transformations to predictors to improve linearity and stabilize variance.  
-  - Addressed residual skewness with a Box-Cox transformation of the response variable.  
-  - Selected the final model based on diagnostics from the training set, ensuring adherence to regression assumptions and a good fit.  
+## Model Building
   
 ```{r}
-library(car)      
-library(MASS)     
-library(lmtest)   
+library(car)
+library(MASS)
+library(lmtest)
 
-# Transform predictors
+# Transform predictors to address non-linearity
 train_data$Detached_Absorption_Quarterly_Avg <- log(train_data$Detached_Absorption_Quarterly_Avg + 1)
 train_data$Starting_Detached_Construction <- log(train_data$Starting_Detached_Construction + 1)
 train_data$Under_Construction_Detached <- log(train_data$Under_Construction_Detached + 1)
-train_data$Completed_Construction_Semi <- log(train_data$Completed_Construction_Semi + 1)
+train_data$Completed_Construction_Semi <- NULL 
 train_data$Detached_Unabsorbed_Quarterly_Avg <- log(train_data$Detached_Unabsorbed_Quarterly_Avg + 1)
+train_data$Semi_Unabsorbed_Quarterly_Avg <- NULL 
+train_data$Starting_Semi_Construction <- NULL 
 
-
-# Box-Cox transformation
+# Box-Cox transformation for response variable to address skewness and heteroscedasticity
 bc <- boxcox(Quarterly_Average ~ Detached_Absorption_Quarterly_Avg +
                                 Starting_Detached_Construction +
                                 Detached_Unabsorbed_Quarterly_Avg +
                                 Under_Construction_Detached +
-                                Completed_Construction_Semi +
                                 CPI_Quarterly_Avg,
              data = train_data, plotit = FALSE)
 lambda <- bc$x[which.max(bc$y)]
@@ -273,45 +245,37 @@ model <- lm(Quarterly_Average ~ Detached_Absorption_Quarterly_Avg +
                                    Starting_Detached_Construction +
                                    Detached_Unabsorbed_Quarterly_Avg +
                                    Under_Construction_Detached +
-                                   Completed_Construction_Semi +
                                    CPI_Quarterly_Avg,
             data = train_data)
 
-# multicollinearity
-vif_values <- vif(model)
-print("VIF Values:")
-print(vif_values)
 
-
-# final model
-print("Final Model Summary:")
-summary(model)
 
 ```
-  
-### Summary of Results:
+The transformations applied in the code aim to address key violations of regression assumptions identified in the data. Logarithmic transformations were used for predictors such as `Detached_Absorption_Quarterly_Avg`, `Starting_Detached_Construction`, and `Detached_Unabsorbed_Quarterly_Avg` to address non-linearity observed in the scatterplots, ensuring a more linear relationship with the response variable, `Quarterly_Average`. Predictors like `Starting_Semi_Construction` and `Semi_Unabsorbed_Quarterly_Avg` were removed due to their highly non-linear behavior, which made them less suitable for inclusion in the model. Similarly, the Box-Cox transformation was applied to the response variable to correct skewness and heteroscedasticity, ensuring constant variance and improving model accuracy. These adjustments collectively enhance the model's adherence to assumptions, reduce potential bias, and improve interpretability.
 
-The multiple linear regression model for predicting the Box-Cox transformed quarterly average housing prices (\(bc\_Quarterly\_Average\)) shows a strong overall fit (\(R^2 = 0.9839\), \(Adj. R^2 = 0.9806\), \(F\)-statistic \(p < 2.2e-16\)), indicating that the selected predictors explain nearly all variability in the response variable. Key significant predictors include Detached_Unabsorbed_Quarterly_Avg (\(p = 8.58e-05\), positive effect), Under_Construction_Detached (\(p = 9.90e-06\), positive effect), and CPI_Quarterly_Avg (\(p = 2.34e-11\), strong positive effect). Detached_Absorption_Quarterly_Avg (\(p = 0.0293\)) exhibits a significant negative relationship with prices. While Starting_Detached_Construction (\(p = 0.0831\)) and Completed_Construction_Semi (\(p = 0.1387\)) are less significant, their inclusion is supported by theoretical relevance.
-
-### Justification for Transformations:
-
-Transformations were applied to stabilize variance, improve linearity, and address multicollinearity. Log-transformations were used for predictors like Detached_Absorption_Quarterly_Avg, Starting_Detached_Construction, and Under_Construction_Detached to handle skewness and make relationships with the response variable more linear. Standardizing CPI_Quarterly_Avg addressed extreme multicollinearity, as it was highly correlated with other predictors. A Box-Cox transformation was applied to the response variable to correct residual skewness and ensure homoscedasticity. These steps collectively improved model diagnostics, reduced variance inflation factors (VIFs), and ensured compliance with regression assumptions, resulting in a more robust and interpretable model.
-
-## 4. Assessment of Assumptions
-- Tools Used: Residual diagnostics using residual vs. fitted plots, Q-Q plots, and histograms.  
-- Findings:  
-  - Linearity: Residual plots indicated clustering around fitted values, with minor deviations suggesting potential non-linearity.  
-  - Homoscedasticity: Fanning in residuals for predictors
-  - Normality: Q-Q plots looks for alignment with normality
-  - Influential Points
-  
 ```{r}
-# Residuals and fitted values
-residuals <- resid(model)
-fitted_values <- fitted(model)
 
-# Residuals vs Fitted Values Plot 
-ggplot(data = NULL, aes(x = fitted_values, y = residuals)) +
+predictors <- c(
+  "Detached_Absorption_Quarterly_Avg",
+  "Detached_Unabsorbed_Quarterly_Avg",
+  "GDP_Quarterly_Avg",
+  "CPI_Quarterly_Avg",
+  "Starting_Detached_Construction",
+  "Under_Construction_Detached",
+  "Completed_Construction_Detached",
+  "rates"
+)
+
+# Residuals and fitted values
+residuals_model <- resid(model)
+fitted_values_model <- fitted(model)
+
+# VIF
+vif_model <- vif(model)
+print(vif_model)
+
+# Linearity
+ggplot(data = NULL, aes(x = fitted_values_model, y = residuals_model)) +
   geom_point(alpha = 0.7) +
   geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
   labs(title = "Residuals vs Fitted Values",
@@ -320,54 +284,29 @@ ggplot(data = NULL, aes(x = fitted_values, y = residuals)) +
   theme_minimal()
 
 # Residuals vs Each Predictor
-predictors <- c("Detached_Absorption_Quarterly_Avg", 
-                "Starting_Detached_Construction", 
-                "Detached_Unabsorbed_Quarterly_Avg", 
-                "Under_Construction_Detached", 
-                "Completed_Construction_Semi", 
-                "CPI_Quarterly_Avg")
-
 for (predictor in predictors) {
-  p <- ggplot(data = train_data, aes_string(x = predictor, y = "residuals")) +
+  p <- ggplot(data = train_data, aes_string(x = predictor, y = "residuals_model")) +
     geom_point(alpha = 0.7) +
     geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
     labs(title = paste("Residuals vs", predictor),
-         x = predictor,
-         y = "Residuals") +
+         x = predictor, y = "Residuals") +
     theme_minimal()
   
-  print(p) 
-  }
+  print(p)
+}
 
-# Normal Q-Q Plot
-qqnorm(residuals, main = "Normal Q-Q Plot")
-qqline(residuals, col = "red")
-
-par(mfrow = c(2, 2)) 
-plot(model)            
-par(mfrow = c(1, 1))  
-
-# Cook's Distance for Influential Points
-cooksd <- cooks.distance(model)
-plot(cooksd, type = "h", main = "Cook's Distance",
-     xlab = "Observation", ylab = "Cook's Distance")
-abline(h = 4/(nrow(train_data) - length(coef(model))), col = "red", lty = 2)
-
-# VIF for Multicollinearity
-vif_values <- vif(model)
-print("Variance Inflation Factor (VIF) Values:")
-print(vif_values)
+# Normality of Residuals
+qqnorm(residuals_model, main = "Normal Q-Q Plot")
+qqline(residuals_model, col = "red")
 
 ```
 
-The diagnostic analysis of the model shows that it performs well overall, but there are a few areas for improvement. Most predictors have acceptable relationships with the outcome variable, and the errors (residuals) are mostly normal, as shown in the Q-Q plot. However, some variables, like **CPI_Quarterly_Avg** and **log_Under_Construction_Detached**, show signs of overlap or dependency (multicollinearity), which could affect the stability of the results. A slight unevenness in the spread of errors (heteroscedasticity) suggests that adjustments, such as transformations, might improve the model's accuracy. One observation (Observation 10) has a bit more influence on the model than others, but it's not severe. Overall, the model is strong and reliable, but fine-tuning and closer inspection of specific predictors could make it even better.
 
-## 5. Model Diagnostics
-- Tools Used: Performance metrics such as \( R^2 \), Adjusted \( R^2 \), AIC, BIC, and RMSE.  
-- Model Fit:  
-  - \( R^2 \):
-  - Adjusted \( R^2 \)
-  - AIC/BIC:  
+### Assumptions and Multicollinearity
+Overall, the model's assumptions are reasonably satisfied. Minor issues with linearity and normality at the tails could be further investigated, but they are not critical. The transformations applied to some predictors appear effective in addressing non-linearity and heteroscedasticity.
+
+
+## Model Diagnostics
 ```{r}
 # Model Performance Metrics
 model_summary <- summary(model)
@@ -393,6 +332,8 @@ cat("BIC: ", round(bic, 4), "\n")
 cat("RMSE: ", round(rmse, 4), "\n")
 
 ```
+
+The regression model demonstrates a strong overall fit, with an R-squared of 0.9832 and an Adjusted R-squared of 0.9807, indicating that the predictors explain a significant portion of the response variable's variability while maintaining robustness. The low RMSE (5.4798) reflects good predictive accuracy, and the AIC (263.6004) and BIC (275.4225) suggest a reasonable balance between model complexity and fit. These metrics highlight the model's effectiveness, though addressing minor residual patterns could further enhance its performance.
 
 ## 6. Model Validation
 
@@ -420,10 +361,14 @@ cat("Mean Squared Error (Test Data):", mse_test, "\n")
 cat("R-squared (Test Data):", r_squared_test, "\n")
 
 ```
- 
+The model's performance on the test data indicates significant issues. The **Mean Squared Error (MSE)** is exceptionally high (\(1.303812 \times 10^{15}\)), demonstrating substantial deviations between predicted and actual values. Additionally, the **R-squared** is highly negative (\(-4.163317 \times 10^{12}\)), indicating that the model performs far worse than simply using the mean of the response variable. These results suggest the model fails to generalize effectively to unseen data.
 
-## 7. Conclusion of Methods
-The performance metrics demonstrate the effectiveness of the regression model on the test data. The Mean Squared Error (MSE) of 1.919877 reflects a small average error between the predicted and actual values, indicating high accuracy. The R-squared value of 0.993665 reveals that the model explains 99.37% of the variability in the test data, showcasing an excellent fit. These results confirm the model's strong predictive ability and validate its generalizability to unseen data.
+
+```{r}
+saveRDS(model, file = here("data", "final_model.rds"))
+```
+
+
 \newpage  
 
 # Bibliography  
