@@ -11,8 +11,10 @@ output:
 ---
 
 # Contributions
-- **Gadiel David Flores:** Description of contributions.
+- **Gadiel David Flores:** Methods, flowchart and Results
 - **Wendy Huang:** Description of contributions.
+
+\newpage
 
 # Introduction
 
@@ -34,7 +36,7 @@ The structure of this paper is as follows: In the Methods section, we describe t
 
 \newpage 
 # Methods
-
+\setlength{\parindent}{2em} 
 ```{r}
 #| echo: false
 #| eval: true
@@ -45,6 +47,10 @@ library(knitr)
 library(here)
 library(kableExtra)
 library(broom) 
+library(dplyr)
+library(gridExtra)
+library(grid)
+library(png)
 
 knitr::include_graphics(here::here("final_paper", "flow_chart.png"))
 
@@ -74,17 +80,33 @@ Model validation was conducted using performance metrics on test data to assess 
 
 # Results {#sec-results}
 
-This section shows the results of the multiple linear regression (MLR) analysis. The response variable for this analysis was New Housing Price Index (NHPI), and 13 predictors were selected, representing factors such as absorption rates, GDP, CPI, and various housing construction metrics. These predictors were chosen based on their theoretical relevance to housing price trends and their potential statistical significance.
+This section presents the results of the multiple linear regression (MLR) analysis. The response variable for this analysis was the New Housing Price Index (NHPI), and eight predictors were selected to represent factors such as absorption, interest rates, GDP, CPI, and various housing construction metrics. These predictors were chosen based on their theoretical relevance to housing price trends and their potential statistical significance. The focus of this model is explanatory, as the aim is to understand the relationships between variables.
 
-Although removing influential observations (rows 1 and 4) improved model fit and precision, we decided against excluding them to avoid overfitting and to maintain the integrity of the dataset. 
+We begin by identifying influential observations. Although removing influential observations (rows 1 and 4) improved model fit and precision, we decided against excluding them to avoid overfitting and to maintain the integrity of the dataset.
 
 The regression analysis conducted for the NHPI response variable exhibits a strong fit on the training data, with an R-squared value of 0.9832 and an Adjusted R-squared of 0.9807, indicating that the predictors explain over 98% of the variability in the response. These metrics demonstrate excellent explanatory power while balancing robustness, as the Adjusted R-squared accounts for the number of predictors in the model. Additionally, the Root Mean Squared Error (RMSE) of 5.4798 reflects low average deviations between predicted and observed values, while the Akaike Information Criterion (AIC) of 263.6004 and Bayesian Information Criterion (BIC) of 275.4225 suggest a reasonable trade-off between model complexity and fit.
 
-Key predictors such as CPI, Unabsorbed Homes, and Under Construction Homes emerged as significant contributors to the model, with consistently low p-values and strong relationships with the response variable. However, issues of multicollinearity remain evident, as demonstrated by high Variance Inflation Factor (VIF) values for predictors like CPI, GDP and Detached Absorption. Multicollinearity inflates standard errors, potentially reducing the reliability of coefficient estimates, which warrants further refinement, such as variable selection or dimensionality reduction. For this reason, the GDP predictor was removed due to its high VIF and lack of significance, along with Completed Construction Semi and Starting Semi Construction.
+Key predictors such as CPI, Unabsorbed Homes, and Completed Construction Homes emerged as significant contributors to the model, with consistently low p-values and strong relationships with the response variable. However, issues of multicollinearity remain evident, as demonstrated by high Variance Inflation Factor (VIF) values for predictors like CPI, GDP and Detached Absorption. Multicollinearity inflates standard errors, potentially reducing the reliability of coefficient estimates, which warrants further refinement, such as variable selection or dimensionality reduction. For this reason, the GDP predictor was removed due to its high VIF and lack of significance, along with starting Construction Homes, and Under Construction Homes as they were not of high significance.
 
-Transformations applied to the predictors, such as logarithmic adjustments to Detached Absorption Quarterly Average, Starting Detached Construction, and Detached Unabsorbed Quarterly Average, addressed non-linear relationships observed in the scatterplots, improving the linearity assumption of regression. The removal of predictors like GDP Quarterly Average, Starting Semi Construction, and Semi Unabsorbed Quarterly Average was motivated by their non-significant p-values and high multicollinearity, streamlining the model while retaining its predictive power. Additionally, the application of a Box-Cox transformation to the response variable mitigated issues of skewness and heteroscedasticity, ensuring constant variance across the fitted values.
+Transformations applied to the predictors, such as logarithmic adjustments to Absorption, Completed Construction, and Unabsorbed homes, addressed non-linear relationships observed in the scatterplots, improving the linearity assumption of regression. The removal of predictors like GDP, and Starting Construction was motivated by their non-significant p-values and high multicollinearity, streamlining the model while retaining its predictive power. Additionally, the application of a Box-Cox transformation to the response variable mitigated issues of skewness and heteroscedasticity, ensuring constant variance across the fitted values.
 
-Residual diagnostic plots indicate that the model reasonably satisfies the key assumptions of linear regression. Residuals are well-centered around zero, with no clear patterns in residuals versus fitted values, suggesting that the linearity and homoscedasticity assumptions are mostly satisfied. However, minor deviations at the tails in the Q-Q plot and some patterns in predictor-specific residual plots hint at potential areas for improvement, such as exploring alternative transformations or addressing influential points.
+```{r}
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+img1 <- rasterGrob(png::readPNG(here::here("final_paper", "completed_contruction.png")), interpolate = TRUE)
+img2 <- rasterGrob(png::readPNG(here::here("final_paper", "cpi.png")), interpolate = TRUE)
+img3 <- rasterGrob(png::readPNG(here::here("final_paper", "aborption.png")), interpolate = TRUE)
+img4 <- rasterGrob(png::readPNG(here::here("final_paper", "resid_v_fitted.png")), interpolate = TRUE)
+
+grid.arrange(img1, img2, img3, img4, ncol = 2)
+```
+
+Residual diagnostic plots indicate that the model reasonably satisfies the key assumptions of linear regression. Residuals are well-centered around zero, with no clear patterns in residuals versus fitted values, suggesting that the linearity and homoscedasticity assumptions are mostly satisfied. 
+
+After applying all the necessary transformations to address non-linearity and improve model fit, the updated regression model demonstrated strong performance metrics. The \( R^2 \) value of 0.9742 indicates that 97.42% of the variance in the response variable is explained by the predictors, with an adjusted \( R^2 \) of 0.9712 accounting for the number of predictors used. The model's Akaike Information Criterion (AIC) of 237.3722 and Bayesian Information Criterion (BIC) of 247.5055 suggest a well-optimized model with minimal overfitting. Additionally, the Root Mean Squared Error (RMSE) of 4.048 confirms a low average prediction error, indicating that the transformations significantly improved the model's predictive accuracy.
 
 Despite strong performance metrics on the training data, the model's performance on the test set highlights significant shortcomings. The Mean Squared Error (MSE) on the test data is alarmingly high (\(1.303812 \times 10^{15}\)), and the R-squared value is highly negative (\(-4.163317 \times 10^{12}\)), indicating that the model fails to generalize to unseen data. These results suggest severe overfitting, where the model captures noise in the training set rather than generalizable patterns, rendering it ineffective for prediction.
 
@@ -102,7 +124,9 @@ model <- readRDS(model_path)
 
 model_summary <- broom::tidy(model)
 
-# Generate a LaTeX table for PDF
+model_summary <- model_summary %>%
+  mutate(across(where(is.numeric), ~ round(.x, 4)))
+
 kable(model_summary, 
       format = "latex", 
       caption = "Model Coefficients and Summary",
@@ -112,6 +136,7 @@ kable(model_summary,
 
 ```
 
+\newpage 
 
 # Conclusion and Limitations {#sec-limitation}
 

@@ -61,16 +61,11 @@ data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
 response <- "Quarterly_Average"
 predictors <- c(
   "Detached_Absorption_Quarterly_Avg",
-  "Semi_Absorption_Quarterly_Avg",
   "Detached_Unabsorbed_Quarterly_Avg",
-  "Semi_Unabsorbed_Quarterly_Avg",
   "GDP_Quarterly_Avg",
   "CPI_Quarterly_Avg",
   "Starting_Detached_Construction",
-  "Starting_Semi_Construction",
   "Under_Construction_Detached",
-  "Under_Construction_Semi",
-  "Completed_Construction_Semi",
   "Completed_Construction_Detached",
   "rates"
 )
@@ -216,20 +211,16 @@ library(car)
 library(MASS)
 library(lmtest)
 
-# Transform predictors to address non-linearity
+# Transform predictors for non-linearity
 train_data$Detached_Absorption_Quarterly_Avg <- log(train_data$Detached_Absorption_Quarterly_Avg + 1)
-train_data$Starting_Detached_Construction <- log(train_data$Starting_Detached_Construction + 1)
-train_data$Under_Construction_Detached <- log(train_data$Under_Construction_Detached + 1)
-train_data$Completed_Construction_Semi <- NULL 
-train_data$Detached_Unabsorbed_Quarterly_Avg <- log(train_data$Detached_Unabsorbed_Quarterly_Avg + 1)
-train_data$Semi_Unabsorbed_Quarterly_Avg <- NULL 
-train_data$Starting_Semi_Construction <- NULL 
+train_data$CPI_Quarterly_Avg <- log(train_data$CPI_Quarterly_Avg + 1)
+train_data$Completed_Construction_Detached <- log(train_data$Completed_Construction_Detached + 1)
+
 
 # Box-Cox transformation for response variable to address skewness and heteroscedasticity
 bc <- boxcox(Quarterly_Average ~ Detached_Absorption_Quarterly_Avg +
-                                Starting_Detached_Construction +
-                                Detached_Unabsorbed_Quarterly_Avg +
-                                Under_Construction_Detached +
+               Detached_Unabsorbed_Quarterly_Avg +
+               Completed_Construction_Detached +
                                 CPI_Quarterly_Avg,
              data = train_data, plotit = FALSE)
 lambda <- bc$x[which.max(bc$y)]
@@ -242,9 +233,9 @@ if (lambda == 0) {
 
 # Fit the linear regression model
 model <- lm(Quarterly_Average ~ Detached_Absorption_Quarterly_Avg +
-                                   Starting_Detached_Construction +
+                                    +
                                    Detached_Unabsorbed_Quarterly_Avg +
-                                   Under_Construction_Detached +
+                                   Completed_Construction_Detached +
                                    CPI_Quarterly_Avg,
             data = train_data)
 
@@ -258,12 +249,8 @@ The transformations applied in the code aim to address key violations of regress
 predictors <- c(
   "Detached_Absorption_Quarterly_Avg",
   "Detached_Unabsorbed_Quarterly_Avg",
-  "GDP_Quarterly_Avg",
   "CPI_Quarterly_Avg",
-  "Starting_Detached_Construction",
-  "Under_Construction_Detached",
-  "Completed_Construction_Detached",
-  "rates"
+  "Completed_Construction_Detached"
 )
 
 # Residuals and fitted values
@@ -335,7 +322,7 @@ cat("RMSE: ", round(rmse, 4), "\n")
 
 The regression model demonstrates a strong overall fit, with an R-squared of 0.9832 and an Adjusted R-squared of 0.9807, indicating that the predictors explain a significant portion of the response variable's variability while maintaining robustness. The low RMSE (5.4798) reflects good predictive accuracy, and the AIC (263.6004) and BIC (275.4225) suggest a reasonable balance between model complexity and fit. These metrics highlight the model's effectiveness, though addressing minor residual patterns could further enhance its performance.
 
-## 6. Model Validation
+## Model Validation
 
 ```{r}
 
