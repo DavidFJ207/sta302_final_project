@@ -61,7 +61,7 @@ knitr::include_graphics(here::here("final_paper", "flow_chart.png"))
 
 ## 1. Data Preparation
 
-According to the topic of house prices and its influencers, we download the dataset with relevant predictors from Statistics Canada (Statistics Canada, 2024). The New Housing Price Index (NHPI) was defined as the response variable, with 13 predictors identified, including absorption (detached-absorption, semi-absorption, detached-unabsorbed, semi-unabsorbed), GDP, CPI, and construction (starting-detached-construction, starting-semi-construction, under construction detached, under construction-semi, completed-construction-detached, completed-construction-semi). 
+According to the topic of house prices and its influencers, we download the dataset with relevant predictors from Statistics Canada (Statistics Canada, 2024). The New Housing Price Index (NHPI) (Government of Canada, Statistics Canada, 2017) was defined as the response variable, with 13 predictors identified, including absorption (detached-absorption, semi-absorption, detached-unabsorbed, semi-unabsorbed), GDP, CPI, and construction (starting-detached-construction, starting-semi-construction, under construction detached, under construction-semi, completed-construction-detached, completed-construction-semi). 
 
 To prepare the data for analysis, we used `tidyverse` for data manipulation and `car` for diagnostics (The R project for statistical computing, 2023). The dataset was cleaned by removing missing values, duplicate observations, and influential outliers identified using Cook's Distance. Finally, the data was randomly split into training (50%) and testing (50%) sets to ensure unbiased and robust analysis.
 
@@ -174,14 +174,30 @@ Finally, as stewards of statistical work, we are responsible for cultivating vir
 
 Geerts, M., vanden Broucke, S., & De Weerdt, J. (2023, May 14). A survey of methods and input data types for house price prediction. MDPI. https://doi.org/10.3390/ijgi12050200 
 
-Gnan, E. (2021, June 25). Monetary policy and housing markets: Interactions and side effects. ECOSCOPE. https://oecdecoscope.blog/2021/06/25/monetary-policy-and-housing-markets-interactions-and-side-effects/ 
+Gnan, E. (2021, June 25). Monetary policy and housing markets: Interactions and side effects. ECOSCOPE. 
+https://oecdecoscope.blog/2021/06/25/monetary-policy-and-housing-markets-interactions-and-side-effects/
 
 Government of Canada, S. C. (2024, December 5). Statistics Canada: Canada’s National Statistical Agency. Statistics Canada: Canada’s national statistical agency. https://www.statcan.gc.ca/en/start 
 
-Government of Canada, Statistics Canada, S. C. (2017, March 9). New housing price index (2007=100). https://doi.org/10.25318/1810005201-eng 
+Government of Canada, Statistics Canada, S. C. (2017, March 9). New housing price index (2007=100). 
+https://doi.org/10.25318/1810005201-eng 
 
-Government of Canada, Statistics Canada, S. C. (2024, November 19). Consumer price index, monthly, not seasonally adjusted. Consumer Price Index, monthly, not seasonally adjusted. https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000401 
+Government of Canada, Statistics Canada, S. C. (2024a, October 16). Canada mortgage and Housing Corporation, housing starts, under construction and completions, all areas, quarterly. Canada Mortgage and Housing Corporation, housing starts, under construction and completions, all areas, quarterly. https://doi.org/10.25318/3410013501-eng 
 
-Muellbauer, J., & Murphy, A. (2021). What drives house prices: Lessons from the literature | CEPR. https://cepr.org/voxeu/columns/what-drives-house-prices-lessons-literature 
+Government of Canada, Statistics Canada, S. C. (2024b, November 19). Consumer price index, monthly, not seasonally adjusted. Consumer Price Index, monthly, not seasonally adjusted. 
+https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000401 
 
-R Foundation for Statistical Computing (Ed.). (2023). The R project for statistical computing. R. https://www.r-project.org/ 
+Government of Canada, Statistics Canada, S. C. (2024c, November 19). Consumer price index, monthly, not seasonally adjusted. Consumer Price Index, monthly, not seasonally adjusted. 
+https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000401 
+
+Government of Canada, Statistics Canada, S. C. (2024d, November 20). Canada mortgage and Housing Corporation, absorptions and unabsorbed inventory, newly completed dwellings, by type of dwelling unit in census metropolitan areas. Canada Mortgage and Housing Corporation, absorptions and unabsorbed inventory, newly completed dwellings, by type of dwelling unit in census metropolitan areas. https://doi.org/10.25318/3410014901-eng 
+
+Government of Canada, Statistics Canada, S. C. (2024e, November 29). Financial Market Statistics, last Wednesday unless otherwise stated, Bank of Canada. Financial market statistics, last Wednesday unless otherwise stated, Bank of Canada. https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1010012201 
+
+Government of Canada, Statistics Canada, S. C. (2024f, November 29). Gross domestic product (GDP) at basic prices, by industry, monthly. https://doi.org/10.25318/3610043401-eng 
+
+Muellbauer, J., & Murphy, A. (2021). What drives house prices: Lessons from the literature | CEPR. 
+https://cepr.org/voxeu/columns/what-drives-house-prices-lessons-literature 
+
+R Foundation for Statistical Computing (Ed.). (2023). The R project for statistical computing. R.
+https://www.r-project.org/ 
