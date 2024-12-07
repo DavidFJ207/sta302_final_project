@@ -1,0 +1,34 @@
+---
+title: "Final Project Part 3 Introduction Demonstration"
+author: 
+  - "Gadiel David Flores"
+  - "Wendy Huang"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 2
+---
+\setlength{\parindent}{2em}
+
+**Editing Process for Final Report**
+
+In our group’s editing process, all members were involved, providing feedback on each other's work. We collaborated to identify areas where clarity and conciseness could be improved while maintaining the message. In our group’s editing process, Wendy wrote the introduction after fully discussing it with David. David handled the entire data cleaning, and once the initial results were generated, both members worked together to finalize the results.
+
+For our editing technique, we chose conciseness. The goal was to remove unnecessary words and streamline the writing without losing essential information. This choice was made because the original introduction contained redundant phrases that hindered the readability of the section. Our primary focus was on conciseness, as we aimed to make the introduction more direct and efficient, while still preserving the academic tone and key points.
+
+**Original text:**
+
+"The aim of this research is to explore the influence of various factors on housing prices in Toronto, focusing on several key aspects such as the number of available homes, homes sold, and new constructions, all of which are important to consider when analyzing the housing market trends."
+
+**Edited text:**
+
+"This research explores factors influencing housing prices in Toronto, focusing on key aspects such as available homes, homes sold, and new constructions, which are critical for analyzing housing market trends."
+
+**What went well:**
+
+The process of cutting down on redundant phrases was effective in making the introduction more direct, and the content remained clear. The meaning of the section was maintained, and the overall flow improved.
+
+**What was challenging:**
+
+Striking the balance between conciseness and retaining essential information was difficult. Some phrases felt necessary for clarity, and it took careful consideration to ensure that cutting words didn’t compromise the intended meaning.It took careful consideration to avoid removing anything that might undermine the reader’s understanding.
